@@ -2,6 +2,12 @@
 
 ## Post install steps
 
+### Enable QEMU guest agent
+
+1. Enable `Run guest-trim after a disk move or VM migration`
+   \_Node > VM > Options > QEMU Guest Agent > toggle `Run guest-trim after a disk move or VM migration`
+2. `sudo apt install qemu-guest-agent`
+
 ### Update System & Unattended Upgrades
 
 1. Update system
@@ -91,3 +97,60 @@ Subsystem sftp /usr/lib/openssh/sftp-server  # Enable SFTP subsystem
    Learn about ssh security [here](https://homelab.casaursus.net/proxmox-new-install-ssh/)
 
 ---
+
+## Docker installation
+
+[Docker install guide](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
+1. Set up Docker's apt repository.
+
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+2. Install the Docker packages.
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+```
+
+3. Verify that the installation is successful by running the hello-world image:
+
+```bash
+ sudo docker run hello-world
+
+```
+
+4. Manage Docker as a non-root user
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+docker run hello-world # Verify
+```
+
+5. Configure Docker to start on boot with systemd
+
+```bash
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+#To stop this behavior, use disable instead.
+#sudo systemctl disable docker.service
+#sudo systemctl disable containerd.service
+```
