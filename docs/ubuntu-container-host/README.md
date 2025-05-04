@@ -87,7 +87,7 @@ Subsystem sftp /usr/lib/openssh/sftp-server  # Enable SFTP subsystem
 ```
 
 5. Test config: `sshd -t`
-6. Reload config: `systemctl reload sshd.service`
+6. Reload config: `sudo systemctl reload ssh`
    Learn about ssh security [here](https://homelab.casaursus.net/proxmox-new-install-ssh/)
 
 ---

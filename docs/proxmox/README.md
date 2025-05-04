@@ -43,7 +43,7 @@ pveum acl modify / --roles PVEAdmin --users jakobe@pam
 
 5. Setup 2FA
 
-### Disable ssh login
+### Disable root ssh login
 
 1. Copy ssh key
 
