@@ -1,6 +1,7 @@
 services:
   caddy:
     container_name: caddy
+    user: 1000:1000
     build:
       context: .
     restart: unless-stopped
@@ -13,7 +14,8 @@ services:
       - ../../data/caddy/data:/data
       - ../../data/caddy/caddy_config:/config
     environment:
-      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+      CF_ZONE_TOKEN: ${CF_ZONE_TOKEN}
+      CF_API_TOKEN: ${CF_API_TOKEN}
     networks:
       dmz:
       caddy_internal:
