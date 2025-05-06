@@ -1,0 +1,4 @@
+# Ignore docker .env file but not symlinks
+/docker/.env
+# Ignore data folder
+/data
