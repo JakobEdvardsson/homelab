@@ -1,13 +1,7 @@
-# To use your own domain name (with automatic HTTPS), first make
-# sure your domain's A/AAAA DNS records are properly pointed to
-# this machine's public IP, then replace "example.com" below with your
-# domain name.
-{
-	# Set the ACME DNS challenge provider to use Cloudflare for all sites
-	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-}
-
 *.edvardsson.tech {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
 	@jellyfin host jellyfin.edvardsson.tech
 	handle @jellyfin {
 		reverse_proxy binhex-jellyfin:8096

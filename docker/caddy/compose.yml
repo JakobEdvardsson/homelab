@@ -1,14 +1,14 @@
 services:
   caddy:
     container_name: caddy
-    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
+    image: caddy-cloudflare:latest
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./config:/etc/caddy # Allows for automatic config reload https://github.com/caddyserver/caddy/issues/5735#issuecomment-1675896585
       - ../../data/caddy/data:/data
       - ../../data/caddy/caddy_config:/config
     environment:
