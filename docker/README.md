@@ -50,7 +50,7 @@ make service-name.env
 ln -sf ../.env ./immich/.env
 
 # for all services:
-make env-projects
+make env
 ```
 
 ## Data

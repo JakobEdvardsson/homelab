@@ -33,7 +33,7 @@ dockercompose = docker compose -f compose.yml
 %.restart: 
 	cd $(PREFIX)/$* && $(dockercompose) restart
 %.env:
-	ln -sf $(ENV_FILE) $(PREFIX)/$*/.env
+	cd ./$* && ln -sf ../.env .env
 # example special target for Caddy
 # .PHONY: caddy.reload
 # caddy.reload:
@@ -57,6 +57,6 @@ up: list-projects $(patsubst %, %.up, $(PROJECTS))
 down: list-projects $(patsubst %, %.down, $(PROJECTS))
 
 # add env symlink
-down: env-projects $(patsubst %, %.env, $(PROJECTS))
+env: list-projects $(patsubst %, %.env, $(PROJECTS))
 
 .DEFAULT_GOAL := up
