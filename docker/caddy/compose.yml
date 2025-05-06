@@ -1,0 +1,28 @@
+services:
+  caddy:
+    container_name: caddy
+    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ../../data/caddy/data:/data
+      - ../../data/caddy/caddy_config:/config
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+    networks:
+      dmz:
+      caddy_internal:
+
+
+networks:
+  dmz:
+    name: dmz
+    driver: bridge
+  caddy_internal:
+    name: caddy_internal
+    driver: bridge
+    internal: true
