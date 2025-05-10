@@ -116,7 +116,7 @@ echo "🧹 Cleaning up..."
 for MOUNT in /mnt/nfs/immich /mnt/nfs/jakob /mnt/backup; do
     if mountpoint -q "$MOUNT"; then
         sudo umount "$MOUNT" || {
-            echo "⚠️ Failed to unmount $MOUNT"
+            echo "❌ Failed to unmount $MOUNT"
             send_discord_message "⚠️ Failed to unmount $MOUNT"
         }
     fi
