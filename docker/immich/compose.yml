@@ -13,6 +13,7 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    user: 1000:1000
     extends:
       file: hwaccel.transcoding.yml
       service: quicksync # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
@@ -40,6 +41,7 @@ services:
 
   immich-machine-learning:
     container_name: immich_machine_learning
+    user: 1000:1000
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
@@ -47,6 +49,7 @@ services:
       file: hwaccel.ml.yml
       service: openvino # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
+      - ${MODEL_CONFIG}:/config
       - ${MODEL_CACHE}:/cache
     env_file:
       - .env
@@ -58,7 +61,10 @@ services:
 
   redis:
     container_name: immich_redis
+    user: 1000:1000
     image: docker.io/valkey/valkey:8-bookworm@sha256:42cba146593a5ea9a622002c1b7cba5da7be248650cbb64ecb9c6c33d29794b1
+    volumes:
+      - ${REDIS_DATA}:/data
     healthcheck:
       test: redis-cli ping || exit 1
     restart: unless-stopped
@@ -67,6 +73,7 @@ services:
 
   database:
     container_name: immich_postgres
+    user: 1000:1000
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
