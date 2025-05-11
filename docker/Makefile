@@ -40,7 +40,7 @@ dockercompose = docker compose -f compose.yml
 # 	docker exec -w /etc/caddy caddy-main-1 caddy reload
 
 # define projects
-PROJECTS = caddy immich
+PROJECTS = caddy immich authentik
 
 # show project list
 .PHONY: list-projects
