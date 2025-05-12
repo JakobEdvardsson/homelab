@@ -13,6 +13,12 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    security_opt:
+      # Prevent escalation of privileges after the container is started
+      - no-new-privileges:true
+    cap_drop:
+      # Prevent access to raw network traffic
+      - NET_RAW
     group_add:
       - video
     user: 1000:1000
@@ -47,6 +53,12 @@ services:
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-openvino
+    security_opt:
+      # Prevent escalation of privileges after the container is started
+      - no-new-privileges:true
+    cap_drop:
+      # Prevent access to raw network traffic
+      - NET_RAW
     group_add:
       - video
     extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
@@ -67,6 +79,12 @@ services:
     container_name: immich_redis
     user: 1000:1000
     image: docker.io/valkey/valkey:8-bookworm@sha256:42cba146593a5ea9a622002c1b7cba5da7be248650cbb64ecb9c6c33d29794b1
+    security_opt:
+      # Prevent escalation of privileges after the container is started
+      - no-new-privileges:true
+    cap_drop:
+      # Prevent access to raw network traffic
+      - NET_RAW
     volumes:
       - ${REDIS_DATA}:/data
     healthcheck:
@@ -79,6 +97,12 @@ services:
     container_name: immich_postgres
     user: 1000:1000
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
+    security_opt:
+      # Prevent escalation of privileges after the container is started
+      - no-new-privileges:true
+    cap_drop:
+      # Prevent access to raw network traffic
+      - NET_RAW
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
