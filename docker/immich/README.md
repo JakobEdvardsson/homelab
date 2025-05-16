@@ -4,6 +4,15 @@
 
 1. Create admin account
 2. Select Storage template `2022/Feb/IMAGE_56437`
+3. Login using authentik
+4. _New API key_
+5. Import images
+
+```bash
+docker exec -it immich_server bash
+immich login https://immich.edvardsson.tech/api API_KEY
+immich upload --include-hidden --recursive directory/
+```
 
 ## Hardware Acceleration
 
