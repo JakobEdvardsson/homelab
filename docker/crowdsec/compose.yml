@@ -1,0 +1,33 @@
+name: crowdsec
+
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec
+    container_name: crowdsec
+    user: 1000:1000
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/caddy crowdsecurity/linux crowdsecurity/linux-lpe crowdsecurity/http-cve crowdsecurity/http-dos crowdsecurity/base-http-scenarios"
+      GID: "1000"
+    group_add:
+      - 4    # adm
+    volumes:
+      - ./acquis.yaml:/etc/crowdsec/acquis.yaml
+      - ../../data/crowdsec/crowdsec-db:/var/lib/crowdsec/data/
+      - ../../data/crowdsec/crowdsec-config:/etc/crowdsec/
+      # Logs:
+      - ../../data/caddy/logs:/var/log/caddy:ro # caddy
+      - /var/log/auth.log:/var/log/auth.log:ro # linux-lpe
+      - /var/log/kern.log:/var/log/kern.log:ro # linux-lpe
+    networks:
+      - caddy_internal
+      - crowdsec
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  crowdsec:
+    name: crowdsec
+    driver: bridge
+  caddy_internal:
+    external: true

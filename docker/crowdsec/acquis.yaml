@@ -1,0 +1,10 @@
+filenames:
+  - /var/log/caddy/*.log
+labels:
+  type: caddy
+---
+filenames:
+  - /var/log/auth.log
+  - /var/log/kern.log
+labels:
+  type: syslog

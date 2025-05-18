@@ -1,7 +1,3 @@
-{
-	#acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
-	email jakob@edvardsson.tech
-}
 (authentik) {
 	# Always forward outpost path to actual outpost
 	reverse_proxy /outpost.goauthentik.io/* authentik_server:9000
@@ -14,7 +10,40 @@
 		copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
 	}
 }
+
+# Global configuration
+{
+	#acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	email jakob@edvardsson.tech
+
+	# CrowdSec bouncer
+	crowdsec {
+		api_url http://crowdsec:8080/
+		api_key {env.CS_API_TOKEN}
+		ticker_interval 15s
+	}
+
+	# Logging
+	log stdout_logger {
+		output stdout
+		format console
+		exclude http.log.access
+	}
+	log file_logger {
+		output file /var/log/caddy/access.log
+		include http.log.access
+	}
+
+	# Make sure crowdsec runs before reverse_proxy (and forward_auth if used)
+	order crowdsec before reverse_proxy
+}
+
 *.edvardsson.tech {
+	# Logging
+	log stdout_logger
+	log file_logger
+
+	# Domain settings
 	tls {
 		dns cloudflare {
 			zone_token {env.CF_ZONE_TOKEN}
@@ -22,20 +51,26 @@
 		}
 		resolvers 1.1.1.1
 	}
+
+	# Reverse Proxy
 	@jellyfin host jellyfin.edvardsson.tech
-	handle @jellyfin {
+	route @jellyfin {
+		crowdsec
 		reverse_proxy binhex-jellyfin:8096
 	}
 	@immich host immich.edvardsson.tech
-	handle @immich {
+	route @immich {
+		crowdsec
 		reverse_proxy immich_server:2283
 	}
 	@authentik host authentik.edvardsson.tech
-	handle @authentik {
+	route @authentik {
+		crowdsec
 		reverse_proxy authentik_server:9000
 	}
 	@homeassistant host homeassistant.edvardsson.tech
-	handle @homeassistant {
+	route @homeassistant {
+		crowdsec
 		@blocked {
 			path *service-worker.js
 		}

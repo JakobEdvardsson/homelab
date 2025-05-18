@@ -13,9 +13,11 @@ services:
       - ./config:/etc/caddy # Allows for automatic config reload https://github.com/caddyserver/caddy/issues/5735#issuecomment-1675896585
       - ../../data/caddy/data:/data
       - ../../data/caddy/caddy_config:/config
+      - ../../data/caddy/logs:/var/log/caddy
     environment:
       CF_ZONE_TOKEN: ${CF_ZONE_TOKEN}
       CF_API_TOKEN: ${CF_API_TOKEN}
+      CS_API_TOKEN: ${CS_API_TOKEN}
     networks:
       dmz:
       caddy_internal:
