@@ -1,0 +1,31 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    network_mode: host
+    # This bypasses network isolation and makes IPv6 easier (optional; see below)
+    restart: unless-stopped
+    # Restart the updater after reboot
+    user: "1000:1000"
+    # Run the updater with specific user and group IDs (in that order).
+    # You can change the two numbers based on your need.
+    read_only: true
+    # Make the container filesystem read-only (optional but recommended)
+    cap_drop: [all]
+    # Drop all Linux capabilities (optional but recommended)
+    security_opt: [no-new-privileges:true]
+    # Another protection to restrict superuser privileges (optional but recommended)
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CF_DDNS_API_TOKEN}
+        # Your Cloudflare API token
+      DOMAINS: "ddns.edvardsson.dev"
+        # Your domains (separated by commas)
+      PROXIED: true
+        # Tell Cloudflare to cache webpages and hide your IP (optional)
+#networks:
+#  LAN0:
+#    external: true
+#    name: LAN0
+# Introduce custom Docker networks to the 'services' in this file. A common use case
+# for this is binding one of the 'services' to a specific network interface available at
+# Docker's host. This section is required for the 'networks' section of each 'services'.

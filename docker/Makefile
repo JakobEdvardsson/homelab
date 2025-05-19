@@ -40,7 +40,7 @@ dockercompose = docker compose -f compose.yml
 # 	docker exec -w /etc/caddy caddy-main-1 caddy reload
 
 # define projects
-PROJECTS = caddy crowdsec authentik immich 
+PROJECTS = caddy crowdsec authentik immich cloudflare-ddns
 
 # show project list
 .PHONY: list-projects

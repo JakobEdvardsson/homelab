@@ -10,7 +10,7 @@
 
 ```bash
 docker exec -it immich_server bash
-immich login https://immich.edvardsson.tech/api API_KEY
+immich login https://immich.edvardsson.dev/api API_KEY
 immich upload --include-hidden --recursive directory/
 ```
 

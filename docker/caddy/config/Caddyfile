@@ -16,6 +16,8 @@
 	#acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 	email jakob@edvardsson.tech
 
+  debug
+
 	# CrowdSec bouncer
 	crowdsec {
 		api_url http://crowdsec:8080/
@@ -38,7 +40,7 @@
 	order crowdsec before reverse_proxy
 }
 
-*.edvardsson.tech {
+*.edvardsson.dev {
 	# Logging
 	log stdout_logger
 	log file_logger
@@ -53,22 +55,22 @@
 	}
 
 	# Reverse Proxy
-	@jellyfin host jellyfin.edvardsson.tech
+	@jellyfin host jellyfin.edvardsson.dev
 	route @jellyfin {
 		crowdsec
 		reverse_proxy binhex-jellyfin:8096
 	}
-	@immich host immich.edvardsson.tech
+	@immich host immich.edvardsson.dev
 	route @immich {
 		crowdsec
 		reverse_proxy immich_server:2283
 	}
-	@authentik host authentik.edvardsson.tech
+	@authentik host authentik.edvardsson.dev
 	route @authentik {
 		crowdsec
 		reverse_proxy authentik_server:9000
 	}
-	@homeassistant host homeassistant.edvardsson.tech
+	@homeassistant host homeassistant.edvardsson.dev
 	route @homeassistant {
 		crowdsec
 		@blocked {
