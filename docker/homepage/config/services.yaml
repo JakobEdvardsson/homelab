@@ -1,29 +1,3 @@
-- Glances:
-    - Info:
-        widget:
-          type: glances
-          url: http://glances:61208
-          metric: info
-          version: 4
-    - CPU Temp:
-        widget:
-          type: glances
-          url: http://glances:61208
-          metric: sensor:Package id 0
-          version: 4
-    - Processes:
-        widget:
-          type: glances
-          url: http://glances:61208
-          metric: process
-          version: 4
-    - Network:
-        widget:
-          type: glances
-          url: http://glances:61208
-          metric: network:eth0
-          version: 4
-
 - Media:
     - Jellyfin:
         icon: jellyfin
@@ -89,7 +63,6 @@
     - Unraid:
         icon: unraid
         href: https://unraid.edvardsson.dev
-        siteMonitor: https://unraid.edvardsson.dev
         description: Unraid host UI
     - Dockge:
         icon: mdi-docker
