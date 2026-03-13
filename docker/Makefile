@@ -26,7 +26,7 @@ dockercompose = docker compose -f docker-compose.yml
 %.env:
 	cd ./$* && ln -sf ../.env .env
 
-PROJECTS = caddy homepage media deluge-vpn immich monitoring
+PROJECTS = caddy homepage media deluge-vpn immich monitoring dockge
 
 .PHONY: list-projects
 list-projects:

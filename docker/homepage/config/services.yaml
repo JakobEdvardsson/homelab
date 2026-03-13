@@ -91,6 +91,11 @@
         href: https://unraid.edvardsson.dev
         siteMonitor: https://unraid.edvardsson.dev
         description: Unraid host UI
+    - Dockge:
+        icon: mdi-docker
+        href: https://dockge.edvardsson.dev
+        siteMonitor: https://dockge.edvardsson.dev
+        description: Docker Compose stack manager
     - UniFi:
         icon: unifi
         href: https://unifi

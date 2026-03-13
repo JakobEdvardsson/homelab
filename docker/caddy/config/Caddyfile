@@ -26,6 +26,11 @@
 		}
 	}
 
+	@dockge host dockge.{$BASE_DOMAIN}
+	handle @dockge {
+		reverse_proxy dockge:5001
+	}
+
 	@jellyfin host jellyfin.{$BASE_DOMAIN}
 	handle @jellyfin {
 		reverse_proxy jellyfin:8096
