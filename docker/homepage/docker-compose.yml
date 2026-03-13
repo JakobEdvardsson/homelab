@@ -6,6 +6,9 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     user: "${PUID}:${PGID}"
     restart: unless-stopped
+    dns:
+      - 100.100.100.100
+      - 10.0.0.1
     env_file:
       - .env
     ports:
@@ -13,25 +16,12 @@ services:
     environment:
       TZ: ${TZ}
       HOMEPAGE_ALLOWED_HOSTS: homepage.${BASE_DOMAIN}
+      HOMEPAGE_VAR_TAILNET_DOMAIN: ${TAILNET_DOMAIN}
     volumes:
       - ./config:/app/config
     networks:
       - caddy_internal
-
-  glances:
-    container_name: glances
-    image: nicolargo/glances:latest-full
-    restart: unless-stopped
-    pid: host
-    env_file:
-      - .env
-    environment:
-      TZ: ${TZ}
-      GLANCES_OPT: -w
-    volumes:
-      - /etc/os-release:/etc/os-release:ro
-    networks:
-      - caddy_internal
+      - default
 
 networks:
   caddy_internal:

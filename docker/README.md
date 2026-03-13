@@ -1,66 +1,85 @@
-# Docker Setup for Homelab
+# Docker Setup for Unraid
 
-This repository contains Docker Compose configurations for various services.
+This directory contains the Unraid-targeted replacement for the NixOS homelab config in [`~/code/nix-config`](/home/jakobe/code/nix-config).
 
-## Setup
+Each stack directory is Compose Manager-friendly:
 
-1. Clone the repo
+- `docker-compose.yml` is the project file name
+- `name` contains the stack name for the Unraid UI
+
+## Stacks
+
+- `caddy`: reverse proxy and wildcard TLS
+- `homepage`: dashboard with service and external links
+- `media`: Jellyfin and the Arr apps
+- `deluge-vpn`: Deluge routed through a VPN sidecar
+- `immich`: Immich app, ML, Redis, and Postgres
+- `monitoring`: Prometheus, Grafana, Healthchecks, and exporters
+- `dockge`: optional compose UI managing the same stack directories
+
+## Initial setup
+
+1. Copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
+2. Adjust the Unraid paths, domain, Cloudflare token, and VPN settings.
+3. Create the shared Docker network:
 
 ```bash
-git clone https://github.com/JakobEdvardsson/homelab.git
+docker network create caddy_internal
 ```
 
-2. Install docker: [Guide](../docs/common/docker-install.md#docker-installation)
-3. Install make
+4. Create symlinks for `.env` files:
 
 ```bash
-sudo apt install make
-```
-
-4. Ready to go!
-
-## Makefile usage
-
-To manage all containers
-
-```bash
-make pull up down
-```
-
-To manage a individual container
-
-```bash
-make <project-name>.<docker-compose-command>
-# example make immich.up | make immich.down
-```
-
-## Adding a service
-
-When adding a new service, make sure to add the project to the Makefile under `PROJECTS`
-
-## .env Symlink
-
-Each service has a symlink to the global `.env` file in the `docker` directory.
-
-To create the symlink for a service, run:
-
-```bash
-make service-name.env
-# or
-ln -sf ../.env ./immich/.env
-
-# for all services:
+cd docker
 make env
 ```
 
-## Data
+5. Start the base services first:
 
-- All config files for each service should be stored in the **`/docker/<service-name>`**
-- All appdata should be stored in the **`/data/<service-name>`** directory.
-- Bulk data will be stored in Unraid with Docker Compose NFS.
+```bash
+make caddy.up
+make homepage.up
+```
 
-## Backup Strategy
+6. Start the application stacks:
 
-The `/data` folder contains all service data, backup this folder
+```bash
+make media.up
+make deluge-vpn.up
+make immich.up
+make monitoring.up
+```
 
-<!-- #TODO: create a backup script / plan  -->
+7. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
+
+```bash
+make dockge.up
+```
+
+## Unraid path model
+
+By default the stacks assume:
+
+- app configs live under `${APPDATA_ROOT}`
+- bulk media lives under `${MEDIA_ROOT}`
+- downloads live under `${DOWNLOADS_ROOT}`
+- Immich originals live under `${IMMICH_LIBRARY_ROOT}`
+
+The example env file is already written for standard Unraid-style `/mnt/user/...` paths.
+
+## Notes
+
+- Jellyfin hardware acceleration expects `/dev/dri` to exist on the Unraid host.
+- Deluge uses `gluetun` as the practical equivalent of the old NixOS VPN namespace setup.
+- Gluetun needs `FIREWALL_INPUT_PORTS` open for sidecar-accessed services such as Deluge WebUI and the daemon port.
+- The Caddy stack assumes you want wildcard certs through Cloudflare DNS.
+- The homepage stack includes external links for Unraid, UniFi, and the two Backrest endpoints from the old setup.
+- Healthchecks still needs an explicit superuser bootstrap step:
+
+```bash
+cd docker/monitoring
+docker compose run healthchecks /opt/healthchecks/manage.py createsuperuser --email admin@edvardsson.dev --password 'replace-me'
+```
+
+- Immich's upstream compose currently includes a `healthcheck.start_interval` on Postgres, but the Immich Unraid docs call out that Unraid's Docker Engine 24.x does not support that field. This repo leaves it out on purpose.
+- Dockge points at the same `docker/` folder as the stack root, so do not manage the same stack from both Dockge and Compose Manager at the same time.

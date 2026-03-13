@@ -1,5 +1,6 @@
 services:
   dockge:
+    container_name: dockge
     image: louislam/dockge:1
     restart: unless-stopped
     ports:
@@ -10,3 +11,9 @@ services:
       - /mnt/user/appdata/homelab/docker:/mnt/user/appdata/homelab/docker
     environment:
       DOCKGE_STACKS_DIR: /mnt/user/appdata/homelab/docker
+    networks:
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

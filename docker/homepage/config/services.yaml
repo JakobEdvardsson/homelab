@@ -63,6 +63,7 @@
     - Unraid:
         icon: unraid
         href: https://unraid.edvardsson.dev
+        siteMonitor: https://unraid.edvardsson.dev
         description: Unraid host UI
     - Dockge:
         icon: mdi-docker
@@ -76,13 +77,13 @@
         description: UniFi controller
     - Ugreen:
         icon: ugreen-nas
-        href: https://ugreen:9443
-        siteMonitor: https://ugreen:9443
+        href: https://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}
+        siteMonitor: https://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}
         description: Ugreen NAS
     - Ugreen - Backrest:
         icon: backrest
-        href: http://ugreen:9898
-        siteMonitor: http://ugreen:9898
+        href: http://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}:9898
+        siteMonitor: http://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}:9898
         description: Ugreen Backrest
     - Tower - Backrest:
         icon: backrest
