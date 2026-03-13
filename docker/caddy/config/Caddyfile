@@ -28,62 +28,80 @@
 
 	@dockge host dockge.{$BASE_DOMAIN}
 	handle @dockge {
-		reverse_proxy dockge:5001
+		reverse_proxy http://dockge:5001
+	}
+
+	@ugreen host ugreen.{$BASE_DOMAIN}
+	handle @ugreen {
+		reverse_proxy https://ugreen.{$TAILNET_DOMAIN}:9443 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+			header_up Host {host}
+			header_up X-Forwarded-Host {host}
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-Port {server_port}
+		}
+	}
+
+	@ugreenBackrest host ugreen-backrest.{$BASE_DOMAIN}
+	handle @ugreenBackrest {
+		reverse_proxy http://ugreen.{$TAILNET_DOMAIN}:9898
 	}
 
 	@jellyfin host jellyfin.{$BASE_DOMAIN}
 	handle @jellyfin {
-		reverse_proxy jellyfin:8096
+		reverse_proxy http://jellyfin:8096
 	}
 
 	@jellyseerr host jellyseerr.{$BASE_DOMAIN}
 	handle @jellyseerr {
-		reverse_proxy jellyseerr:5055
+		reverse_proxy http://jellyseerr:5055
 	}
 
 	@prowlarr host prowlarr.{$BASE_DOMAIN}
 	handle @prowlarr {
-		reverse_proxy prowlarr:9696
+		reverse_proxy http://prowlarr:9696
 	}
 
 	@radarr host radarr.{$BASE_DOMAIN}
 	handle @radarr {
-		reverse_proxy radarr:7878
+		reverse_proxy http://radarr:7878
 	}
 
 	@sonarr host sonarr.{$BASE_DOMAIN}
 	handle @sonarr {
-		reverse_proxy sonarr:8989
+		reverse_proxy http://sonarr:8989
 	}
 
 	@bazarr host bazarr.{$BASE_DOMAIN}
 	handle @bazarr {
-		reverse_proxy bazarr:6767
+		reverse_proxy http://bazarr:6767
 	}
 
 	@deluge host deluge.{$BASE_DOMAIN}
 	handle @deluge {
-		reverse_proxy gluetun:8112
+		reverse_proxy http://gluetun:8112
 	}
 
 	@immich host immich.{$BASE_DOMAIN}
 	handle @immich {
-		reverse_proxy immich_server:2283
+		reverse_proxy http://immich_server:2283
 	}
 
 	@grafana host grafana.{$BASE_DOMAIN}
 	handle @grafana {
-		reverse_proxy grafana:3000
+		reverse_proxy http://grafana:3000
 	}
 
 	@prometheus host prometheus.{$BASE_DOMAIN}
 	handle @prometheus {
-		reverse_proxy prometheus:9090
+		reverse_proxy http://prometheus:9090
 	}
 
 	@healthchecks host healthchecks.{$BASE_DOMAIN}
 	handle @healthchecks {
-		reverse_proxy healthchecks:8000
+		reverse_proxy http://healthchecks:8000
 	}
 
 	handle {

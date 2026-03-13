@@ -16,7 +16,6 @@ services:
     environment:
       TZ: ${TZ}
       HOMEPAGE_ALLOWED_HOSTS: homepage.${BASE_DOMAIN}
-      HOMEPAGE_VAR_TAILNET_DOMAIN: ${TAILNET_DOMAIN}
     volumes:
       - ./config:/app/config
     networks:

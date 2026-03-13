@@ -77,13 +77,13 @@
         description: UniFi controller
     - Ugreen:
         icon: ugreen-nas
-        href: https://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}
-        siteMonitor: https://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}
+        href: https://ugreen.edvardsson.dev
+        siteMonitor: https://ugreen.edvardsson.dev
         description: Ugreen NAS
     - Ugreen - Backrest:
         icon: backrest
-        href: http://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}:9898
-        siteMonitor: http://ugreen.{{HOMEPAGE_VAR_TAILNET_DOMAIN}}:9898
+        href: https://ugreen-backrest.edvardsson.dev
+        siteMonitor: https://ugreen-backrest.edvardsson.dev
         description: Ugreen Backrest
     - Tower - Backrest:
         icon: backrest

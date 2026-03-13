@@ -5,6 +5,9 @@ services:
     build:
       context: .
     restart: unless-stopped
+    dns:
+      - 100.100.100.100
+      - 10.0.0.1
     ports:
       - "80:80"
       - "443:443"
@@ -17,6 +20,7 @@ services:
     environment:
       ACME_EMAIL: ${ACME_EMAIL}
       BASE_DOMAIN: ${BASE_DOMAIN}
+      TAILNET_DOMAIN: ${TAILNET_DOMAIN}
       CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
     networks:
       dmz:
