@@ -1,83 +1,87 @@
-(authentik) {
-	# Always forward outpost path to actual outpost
-	reverse_proxy /outpost.goauthentik.io/* authentik_server:9000
-
-	# Forward authentication to outpost
-	forward_auth authentik_server:9000 {
-		uri /outpost.goauthentik.io/auth/caddy
-
-		# Capitalization of the headers is important, otherwise they will be empty
-		copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
-	}
-}
-
-# Global configuration
 {
-	#acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
-	email jakob@edvardsson.tech
-
-  debug
-
-	# CrowdSec bouncer
-	crowdsec {
-		api_url http://crowdsec:8080/
-		api_key {env.CS_API_TOKEN}
-		ticker_interval 15s
-	}
-
-	# Logging
-	log stdout_logger {
-		output stdout
-		format console
-		exclude http.log.access
-	}
-	log file_logger {
-		output file /var/log/caddy/access.log
-		include http.log.access
-	}
-
-	# Make sure crowdsec runs before reverse_proxy (and forward_auth if used)
-	order crowdsec before reverse_proxy
+	email {$ACME_EMAIL}
 }
 
-*.edvardsson.dev {
-	# Logging
-	log stdout_logger
-	log file_logger
-
-	# Domain settings
+*.{$BASE_DOMAIN} {
 	tls {
-		dns cloudflare {
-			zone_token {env.CF_ZONE_TOKEN}
-			api_token {env.CF_API_TOKEN}
-		}
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
 		resolvers 1.1.1.1
 	}
 
-	# Reverse Proxy
-	@jellyfin host jellyfin.edvardsson.dev
-	route @jellyfin {
-		crowdsec
-		reverse_proxy binhex-jellyfin:8096
+	@homepage host homepage.{$BASE_DOMAIN}
+	handle @homepage {
+		reverse_proxy homepage:3000
 	}
-	@immich host immich.edvardsson.dev
-	route @immich {
-		crowdsec
+
+	@unraid host unraid.{$BASE_DOMAIN}
+	handle @unraid {
+		reverse_proxy https://tower:444 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+			header_up Host {host}
+			header_up X-Forwarded-Host {host}
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-Port {server_port}
+		}
+	}
+
+	@jellyfin host jellyfin.{$BASE_DOMAIN}
+	handle @jellyfin {
+		reverse_proxy jellyfin:8096
+	}
+
+	@jellyseerr host jellyseerr.{$BASE_DOMAIN}
+	handle @jellyseerr {
+		reverse_proxy jellyseerr:5055
+	}
+
+	@prowlarr host prowlarr.{$BASE_DOMAIN}
+	handle @prowlarr {
+		reverse_proxy prowlarr:9696
+	}
+
+	@radarr host radarr.{$BASE_DOMAIN}
+	handle @radarr {
+		reverse_proxy radarr:7878
+	}
+
+	@sonarr host sonarr.{$BASE_DOMAIN}
+	handle @sonarr {
+		reverse_proxy sonarr:8989
+	}
+
+	@bazarr host bazarr.{$BASE_DOMAIN}
+	handle @bazarr {
+		reverse_proxy bazarr:6767
+	}
+
+	@deluge host deluge.{$BASE_DOMAIN}
+	handle @deluge {
+		reverse_proxy gluetun:8112
+	}
+
+	@immich host immich.{$BASE_DOMAIN}
+	handle @immich {
 		reverse_proxy immich_server:2283
 	}
-	@authentik host authentik.edvardsson.dev
-	route @authentik {
-		crowdsec
-		reverse_proxy authentik_server:9000
+
+	@grafana host grafana.{$BASE_DOMAIN}
+	handle @grafana {
+		reverse_proxy grafana:3000
 	}
-	@homeassistant host homeassistant.edvardsson.dev
-	route @homeassistant {
-		crowdsec
-		@blocked {
-			path *service-worker.js
-		}
-		respond @blocked 404
-		import authentik
-		reverse_proxy 10.0.0.43:8123
+
+	@prometheus host prometheus.{$BASE_DOMAIN}
+	handle @prometheus {
+		reverse_proxy prometheus:9090
+	}
+
+	@healthchecks host healthchecks.{$BASE_DOMAIN}
+	handle @healthchecks {
+		reverse_proxy healthchecks:8000
+	}
+
+	handle {
+		redir https://homepage.{$BASE_DOMAIN}{uri} permanent
 	}
 }

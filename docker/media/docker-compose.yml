@@ -1,0 +1,116 @@
+name: media
+
+services:
+  jellyfin:
+    container_name: jellyfin
+    image: lscr.io/linuxserver/jellyfin:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${JELLYFIN_PUBLISHED_PORT}:8096"
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - ${APPDATA_ROOT}/jellyfin:/config
+      - ${MEDIA_ROOT}:/media
+    networks:
+      - caddy_internal
+
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ}
+      LOG_LEVEL: info
+    ports:
+      - "${JELLYSEERR_PUBLISHED_PORT}:5055"
+    volumes:
+      - ${APPDATA_ROOT}/jellyseerr:/app/config
+    networks:
+      - caddy_internal
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${PROWLARR_PUBLISHED_PORT}:9696"
+    volumes:
+      - ${APPDATA_ROOT}/prowlarr:/config
+    networks:
+      - caddy_internal
+
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${RADARR_PUBLISHED_PORT}:7878"
+    volumes:
+      - ${APPDATA_ROOT}/radarr:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${DOWNLOADS_ROOT}:/downloads
+    networks:
+      - caddy_internal
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${SONARR_PUBLISHED_PORT}:8989"
+    volumes:
+      - ${APPDATA_ROOT}/sonarr:/config
+      - ${MEDIA_ROOT}/tv:/tv
+      - ${DOWNLOADS_ROOT}:/downloads
+    networks:
+      - caddy_internal
+
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    ports:
+      - "${BAZARR_PUBLISHED_PORT}:6767"
+    volumes:
+      - ${APPDATA_ROOT}/bazarr:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${MEDIA_ROOT}/tv:/tv
+    networks:
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

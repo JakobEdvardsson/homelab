@@ -1,0 +1,38 @@
+name: homepage
+
+services:
+  homepage:
+    container_name: homepage
+    image: ghcr.io/gethomepage/homepage:latest
+    user: "${PUID}:${PGID}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${HOMEPAGE_PUBLISHED_PORT}:3000"
+    environment:
+      TZ: ${TZ}
+      HOMEPAGE_ALLOWED_HOSTS: homepage.${BASE_DOMAIN}
+    volumes:
+      - ./config:/app/config
+    networks:
+      - caddy_internal
+
+  glances:
+    container_name: glances
+    image: nicolargo/glances:latest-full
+    restart: unless-stopped
+    pid: host
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ}
+      GLANCES_OPT: -w
+    volumes:
+      - /etc/os-release:/etc/os-release:ro
+    networks:
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

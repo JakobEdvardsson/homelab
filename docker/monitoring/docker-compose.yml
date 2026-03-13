@@ -1,0 +1,107 @@
+name: monitoring
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${PROMETHEUS_PUBLISHED_PORT}:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+      - ${APPDATA_ROOT}/prometheus:/prometheus
+    networks:
+      - caddy_internal
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_SERVER_ROOT_URL: https://grafana.${BASE_DOMAIN}
+      GF_SERVER_DOMAIN: grafana.${BASE_DOMAIN}
+      GF_SERVER_SERVE_FROM_SUB_PATH: "false"
+    ports:
+      - "${GRAFANA_PUBLISHED_PORT}:3000"
+    volumes:
+      - ${APPDATA_ROOT}/grafana:/var/lib/grafana
+    networks:
+      - caddy_internal
+
+  healthchecks:
+    container_name: healthchecks
+    image: healthchecks/healthchecks:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ}
+      SITE_ROOT: https://healthchecks.${BASE_DOMAIN}
+      SITE_NAME: Homelab Healthchecks
+      SECRET_KEY: ${HEALTHCHECKS_SECRET_KEY}
+      ALLOWED_HOSTS: healthchecks.${BASE_DOMAIN}
+      DB: sqlite
+      DB_NAME: /data/hc.sqlite
+    ports:
+      - "${HEALTHCHECKS_PUBLISHED_PORT}:8000"
+    volumes:
+      - ${APPDATA_ROOT}/healthchecks:/data
+    networks:
+      - caddy_internal
+
+  node-exporter:
+    container_name: node-exporter
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.processes
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - caddy_internal
+
+  deluge-exporter:
+    container_name: deluge-exporter
+    image: pescuma/deluge-exporter:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DELUGE_ADDR: gluetun
+      DELUGE_PORT: 58846
+      DELUGE_PASSWORD: ${DELUGE_PASSWORD}
+    networks:
+      - caddy_internal
+
+  immich-exporter:
+    container_name: immich-exporter
+    image: friendlyfriend/prometheus-immich-exporter:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      IMMICH_HOST: immich_server
+      IMMICH_PORT: 2283
+      EXPORTER_PORT: 9183
+      EXPORTER_LOG_LEVEL: WARNING
+    networks:
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

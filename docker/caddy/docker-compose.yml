@@ -1,7 +1,7 @@
 services:
   caddy:
     container_name: caddy
-    user: 1000:1000
+    user: "${PUID}:${PGID}"
     build:
       context: .
     restart: unless-stopped
@@ -11,17 +11,16 @@ services:
       - "443:443/udp"
     volumes:
       - ./config:/etc/caddy # Allows for automatic config reload https://github.com/caddyserver/caddy/issues/5735#issuecomment-1675896585
-      - ../../data/caddy/data:/data
-      - ../../data/caddy/caddy_config:/config
-      - ../../data/caddy/logs:/var/log/caddy
+      - ${APPDATA_ROOT}/caddy/data:/data
+      - ${APPDATA_ROOT}/caddy/config:/config
+      - ${APPDATA_ROOT}/caddy/logs:/var/log/caddy
     environment:
-      CF_ZONE_TOKEN: ${CF_ZONE_TOKEN}
-      CF_API_TOKEN: ${CF_API_TOKEN}
-      CS_API_TOKEN: ${CS_API_TOKEN}
+      ACME_EMAIL: ${ACME_EMAIL}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
     networks:
       dmz:
       caddy_internal:
-
 
 networks:
   dmz:
