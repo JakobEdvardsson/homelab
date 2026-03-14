@@ -11,6 +11,12 @@ services:
       - /mnt/user/appdata/homelab/docker:/mnt/user/appdata/homelab/docker
     environment:
       DOCKGE_STACKS_DIR: /mnt/user/appdata/homelab/docker
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dockge.png"
+      net.unraid.docker.webui: "https://dockge.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "dockge"
     networks:
       - caddy_internal
 

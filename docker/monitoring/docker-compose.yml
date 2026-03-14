@@ -16,6 +16,12 @@ services:
     volumes:
       - ./prometheus:/etc/prometheus:ro
       - ${APPDATA_ROOT}/prometheus:/prometheus
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
+      net.unraid.docker.webui: "https://prometheus.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 
@@ -35,6 +41,12 @@ services:
       - "${GRAFANA_PUBLISHED_PORT}:3000"
     volumes:
       - ${APPDATA_ROOT}/grafana:/var/lib/grafana
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png"
+      net.unraid.docker.webui: "https://grafana.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 
@@ -56,6 +68,12 @@ services:
       - "${HEALTHCHECKS_PUBLISHED_PORT}:8000"
     volumes:
       - ${APPDATA_ROOT}/healthchecks:/data
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/healthchecks.png"
+      net.unraid.docker.webui: "https://healthchecks.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 
@@ -72,6 +90,12 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 
@@ -85,6 +109,12 @@ services:
       DELUGE_ADDR: gluetun
       DELUGE_PORT: 58846
       DELUGE_PASSWORD: ${DELUGE_PASSWORD}
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 
@@ -99,6 +129,12 @@ services:
       IMMICH_PORT: 2283
       EXPORTER_PORT: 9183
       EXPORTER_LOG_LEVEL: WARNING
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "monitoring"
     networks:
       - caddy_internal
 

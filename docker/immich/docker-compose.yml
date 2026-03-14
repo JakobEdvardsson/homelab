@@ -42,6 +42,12 @@ services:
     restart: unless-stopped
     healthcheck:
       disable: false
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
+      net.unraid.docker.webui: "https://immich.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "immich"
     networks:
       - immich
       - caddy_internal
@@ -72,6 +78,12 @@ services:
     restart: unless-stopped
     healthcheck:
       disable: false
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "immich"
     networks:
       - immich
 
@@ -90,6 +102,12 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: unless-stopped
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/redis.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "immich"
     networks:
       - immich
 
@@ -118,6 +136,12 @@ services:
     command: >-
       postgres -c shared_preload_libraries=vectors.so -c 'search_path="$$user", public, vectors' -c logging_collector=on -c max_wal_size=2GB -c shared_buffers=512MB -c wal_compression=on
     restart: unless-stopped
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/postgres.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "immich"
     networks:
       - immich
 

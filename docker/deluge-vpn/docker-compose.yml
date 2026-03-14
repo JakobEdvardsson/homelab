@@ -27,6 +27,12 @@ services:
     ports:
       - "${DELUGE_WEB_PUBLISHED_PORT}:8112"
       - "58846:58846"
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gluetun.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view: "deluge-vpn"
     networks:
       - caddy_internal
 
@@ -48,6 +54,12 @@ services:
     volumes:
       - ${APPDATA_ROOT}/deluge:/config
       - ${DOWNLOADS_ROOT}:/downloads
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/deluge.png"
+      net.unraid.docker.webui: "https://deluge.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "deluge-vpn"
 
 networks:
   caddy_internal:

@@ -18,6 +18,12 @@ services:
     volumes:
       - ${APPDATA_ROOT}/jellyfin:/config
       - ${MEDIA_ROOT}:/media
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png"
+      net.unraid.docker.webui: "https://jellyfin.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
@@ -34,6 +40,12 @@ services:
       - "${JELLYSEERR_PUBLISHED_PORT}:5055"
     volumes:
       - ${APPDATA_ROOT}/jellyseerr:/app/config
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyseerr.png"
+      net.unraid.docker.webui: "https://jellyseerr.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
@@ -51,6 +63,12 @@ services:
       - "${PROWLARR_PUBLISHED_PORT}:9696"
     volumes:
       - ${APPDATA_ROOT}/prowlarr:/config
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prowlarr.png"
+      net.unraid.docker.webui: "https://prowlarr.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
@@ -70,6 +88,12 @@ services:
       - ${APPDATA_ROOT}/radarr:/config
       - ${MEDIA_ROOT}/movies:/movies
       - ${DOWNLOADS_ROOT}:/downloads
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/radarr.png"
+      net.unraid.docker.webui: "https://radarr.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
@@ -89,6 +113,12 @@ services:
       - ${APPDATA_ROOT}/sonarr:/config
       - ${MEDIA_ROOT}/tv:/tv
       - ${DOWNLOADS_ROOT}:/downloads
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/sonarr.png"
+      net.unraid.docker.webui: "https://sonarr.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
@@ -108,6 +138,12 @@ services:
       - ${APPDATA_ROOT}/bazarr:/config
       - ${MEDIA_ROOT}/movies:/movies
       - ${MEDIA_ROOT}/tv:/tv
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/bazarr.png"
+      net.unraid.docker.webui: "https://bazarr.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "media"
     networks:
       - caddy_internal
 
