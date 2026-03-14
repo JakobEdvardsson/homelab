@@ -2,6 +2,15 @@
 	email {$ACME_EMAIL}
 }
 
+(authentik) {
+	reverse_proxy /outpost.goauthentik.io/* http://authentik-server:9000
+
+	forward_auth http://authentik-server:9000 {
+		uri /outpost.goauthentik.io/auth/caddy
+		copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+	}
+}
+
 *.{$BASE_DOMAIN} {
 	tls {
 		dns cloudflare {$CLOUDFLARE_API_TOKEN}
@@ -29,6 +38,11 @@
 	@dockge host dockge.{$BASE_DOMAIN}
 	handle @dockge {
 		reverse_proxy http://dockge:5001
+	}
+
+	@authentik host authentik.{$BASE_DOMAIN}
+	handle @authentik {
+		reverse_proxy http://authentik-server:9000
 	}
 
 	@ugreen host ugreen.{$BASE_DOMAIN}

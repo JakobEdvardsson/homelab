@@ -43,6 +43,11 @@
         description: Torrent client
 
 - Services:
+    - Authentik:
+        icon: authentik
+        href: https://authentik.edvardsson.dev
+        siteMonitor: https://authentik.edvardsson.dev
+        description: Identity provider and forward-auth gateway
     - Grafana:
         icon: grafana
         href: https://grafana.edvardsson.dev
