@@ -1,5 +1,5 @@
 #
-# WARNING: To install Immich, follow our guide: https://immich.app/docs/install/docker-compose
+# WARNING: To install Immich, follow our guide: https://docs.immich.app/install/docker-compose
 #
 # Make sure to use the docker-compose.yml of the current release:
 #
@@ -13,25 +13,13 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    security_opt:
-      # Prevent escalation of privileges after the container is started
-      - no-new-privileges:true
-    cap_drop:
-      # Prevent access to raw network traffic
-      - NET_RAW
-    group_add:
-      - 44
-      - 109
-    user: ${PUID}:${PGID}
     extends:
       file: hwaccel.transcoding.yml
       service: quicksync # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
-      - ${IMMICH_LIBRARY_ROOT}:/usr/src/app/upload
-      - ${IMMICH_THUMBS_ROOT}:/usr/src/app/upload/thumbs
-      - ${IMMICH_ENCODED_VIDEO_ROOT}:/usr/src/app/upload/encoded-video
-      - ${IMMICH_PROFILE_ROOT}:/usr/src/app/upload/profile
-      - ${IMMICH_BACKUPS_ROOT}:/usr/src/app/upload/backups
+      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
+      - ${UPLOAD_LOCATION}:/data
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
     ports:
@@ -39,7 +27,7 @@ services:
     depends_on:
       - redis
       - database
-    restart: unless-stopped
+    restart: always
     healthcheck:
       disable: false
     labels:
@@ -49,33 +37,22 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view: "immich"
     networks:
-      - immich
+      - default
       - caddy_internal
 
   immich-machine-learning:
     container_name: immich_machine_learning
-    user: ${PUID}:${PGID}
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-openvino
-    security_opt:
-      # Prevent escalation of privileges after the container is started
-      - no-new-privileges:true
-    cap_drop:
-      # Prevent access to raw network traffic
-      - NET_RAW
-    group_add:
-      - 44
-      - 109
-    extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+    extends: # uncomment this section for hardware acceleration - see https://docs.immich.app/features/ml-hardware-acceleration
       file: hwaccel.ml.yml
       service: openvino # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
-      - ${IMMICH_MODEL_CONFIG_ROOT}:/config
-      - ${IMMICH_MODEL_CACHE_ROOT}:/cache
+      - ${APPDATA_ROOT}/immich/model-cache:/cache
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
     healthcheck:
       disable: false
     labels:
@@ -84,70 +61,46 @@ services:
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
       folder.view: "immich"
-    networks:
-      - immich
 
   redis:
     container_name: immich_redis
-    user: ${PUID}:${PGID}
-    image: docker.io/valkey/valkey:8-bookworm@sha256:42cba146593a5ea9a622002c1b7cba5da7be248650cbb64ecb9c6c33d29794b1
-    security_opt:
-      # Prevent escalation of privileges after the container is started
-      - no-new-privileges:true
-    cap_drop:
-      # Prevent access to raw network traffic
-      - NET_RAW
-    volumes:
-      - ${APPDATA_ROOT}/immich/redis:/data
+    image: docker.io/valkey/valkey:9@sha256:546304417feac0874c3dd576e0952c6bb8f06bb4093ea0c9ca303c73cf458f63
     healthcheck:
       test: redis-cli ping || exit 1
-    restart: unless-stopped
+    restart: always
+    volumes:
+      - ${APPDATA_ROOT}/immich/redis:/data
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/redis.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
       folder.view: "immich"
-    networks:
-      - immich
 
   database:
     container_name: immich_postgres
-    user: ${PUID}:${PGID}
-    image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
-    security_opt:
-      # Prevent escalation of privileges after the container is started
-      - no-new-privileges:true
-    cap_drop:
-      # Prevent access to raw network traffic
-      - NET_RAW
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_INITDB_ARGS: "--data-checksums"
+      # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
+      # DB_STORAGE_TYPE: 'HDD'
     volumes:
-      - ${APPDATA_ROOT}/immich/postgres:/var/lib/postgresql/data
+      # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
+      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+    shm_size: 128mb
+    restart: always
     healthcheck:
-      test: >-
-        pg_isready --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" || exit 1; Chksum="$$(psql --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')"; echo "checksum failure count is $$Chksum"; [ "$$Chksum" = '0' ] || exit 1
-      interval: 5m
-      start_period: 5m
-    command: >-
-      postgres -c shared_preload_libraries=vectors.so -c 'search_path="$$user", public, vectors' -c logging_collector=on -c max_wal_size=2GB -c shared_buffers=512MB -c wal_compression=on
-    restart: unless-stopped
+      disable: false
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/postgres.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
       folder.view: "immich"
-    networks:
-      - immich
 
 networks:
-  immich:
-    name: immich
-    driver: bridge
   caddy_internal:
     external: true
