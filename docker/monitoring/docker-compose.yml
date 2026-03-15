@@ -21,7 +21,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: "https://prometheus.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 
@@ -46,7 +46,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png"
       net.unraid.docker.webui: "https://grafana.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 
@@ -73,7 +73,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/healthchecks.png"
       net.unraid.docker.webui: "https://healthchecks.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 
@@ -95,7 +95,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 
@@ -114,7 +114,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 
@@ -134,7 +134,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "monitoring"
+      folder.view3: "monitoring"
     networks:
       - caddy_internal
 

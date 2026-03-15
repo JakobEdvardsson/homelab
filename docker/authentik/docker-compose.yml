@@ -19,7 +19,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "authentik"
+      folder.view3: "authentik"
 
   postgresql:
     container_name: authentik-postgresql
@@ -77,7 +77,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png"
       net.unraid.docker.webui: "https://authentik.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "authentik"
+      folder.view3: "authentik"
     networks:
       - default
       - caddy_internal
@@ -108,7 +108,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "authentik"
+      folder.view3: "authentik"
 
 networks:
   caddy_internal:

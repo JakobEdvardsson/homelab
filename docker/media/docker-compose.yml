@@ -23,7 +23,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png"
       net.unraid.docker.webui: "https://jellyfin.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 
@@ -45,7 +45,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyseerr.png"
       net.unraid.docker.webui: "https://jellyseerr.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 
@@ -68,7 +68,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prowlarr.png"
       net.unraid.docker.webui: "https://prowlarr.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 
@@ -93,7 +93,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/radarr.png"
       net.unraid.docker.webui: "https://radarr.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 
@@ -118,7 +118,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/sonarr.png"
       net.unraid.docker.webui: "https://sonarr.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 
@@ -143,7 +143,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/bazarr.png"
       net.unraid.docker.webui: "https://bazarr.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "media"
+      folder.view3: "media"
     networks:
       - caddy_internal
 

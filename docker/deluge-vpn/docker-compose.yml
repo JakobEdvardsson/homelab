@@ -32,7 +32,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gluetun.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "deluge-vpn"
+      folder.view3: "deluge-vpn"
     networks:
       - caddy_internal
 
@@ -59,7 +59,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/deluge.png"
       net.unraid.docker.webui: "https://deluge.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "deluge-vpn"
+      folder.view3: "deluge-vpn"
 
 networks:
   caddy_internal:

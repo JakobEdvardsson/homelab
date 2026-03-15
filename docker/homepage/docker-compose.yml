@@ -23,7 +23,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png"
       net.unraid.docker.webui: "https://homepage.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "homepage"
+      folder.view3: "homepage"
     networks:
       - caddy_internal
       - default

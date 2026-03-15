@@ -35,7 +35,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
       net.unraid.docker.webui: "https://immich.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view: "immich"
+      folder.view3: "immich"
     networks:
       - default
       - caddy_internal
@@ -60,7 +60,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "immich"
+      folder.view3: "immich"
 
   redis:
     container_name: immich_redis
@@ -75,7 +75,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/redis.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "immich"
+      folder.view3: "immich"
 
   database:
     container_name: immich_postgres
@@ -99,7 +99,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/postgres.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "immich"
+      folder.view3: "immich"
 
 networks:
   caddy_internal:

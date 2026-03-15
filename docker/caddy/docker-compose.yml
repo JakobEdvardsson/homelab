@@ -27,7 +27,7 @@ services:
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/caddy.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
-      folder.view: "caddy"
+      folder.view3: "caddy"
     networks:
       dmz:
       caddy_internal:

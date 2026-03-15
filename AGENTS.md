@@ -12,7 +12,13 @@ When adding a new service to this repo:
    - `net.unraid.docker.icon`
    - `net.unraid.docker.webui`
    - `net.unraid.docker.shell`
-   - `folder.view`
+   - `folder.view3`
+   - If you add a new `folder.view3` label value, also add the matching folder definition to [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json).
+   - Whenever [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json) changes, copy it to the live Unraid plugin path because `/boot` is FAT32 and cannot use symlinks:
+
+```bash
+cp /mnt/user/appdata/homelab/folderview/docker.json /boot/config/plugins/folder.view/docker.json
+```
 7. For every stack directory, symlink the shared `.env` file into the stack directory:
 
 ```bash
