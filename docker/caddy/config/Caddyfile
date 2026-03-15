@@ -45,6 +45,11 @@
 		reverse_proxy http://authentik-server:9000
 	}
 
+	@czkawka host czkawka.{$BASE_DOMAIN}
+	handle @czkawka {
+		reverse_proxy http://czkawka:5800
+	}
+
 	@ugreen host ugreen.{$BASE_DOMAIN}
 	handle @ugreen {
 		reverse_proxy https://ugreen.{$TAILNET_DOMAIN}:9443 {

@@ -48,6 +48,11 @@
         href: https://authentik.edvardsson.dev
         siteMonitor: https://authentik.edvardsson.dev
         description: Identity provider and forward-auth gateway
+    - Czkawka:
+        icon: mdi-content-duplicate
+        href: https://czkawka.edvardsson.dev
+        siteMonitor: https://czkawka.edvardsson.dev
+        description: Duplicate file finder
     - Grafana:
         icon: grafana
         href: https://grafana.edvardsson.dev

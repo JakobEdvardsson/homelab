@@ -1,0 +1,29 @@
+name: czkawka
+
+services:
+  czkawka:
+    container_name: czkawka
+    image: jlesage/czkawka:latest
+    restart: unless-stopped
+    shm_size: "1gb"
+    ports:
+      - "${CZKAWKA_PUBLISHED_PORT}:5800"
+    environment:
+      TZ: ${TZ}
+      USER_ID: ${PUID}
+      GROUP_ID: ${PGID}
+    volumes:
+      - ${APPDATA_ROOT}/czkawka:/config
+      - ${CZKAWKA_STORAGE_ROOT}:/storage
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/files.png"
+      net.unraid.docker.webui: "https://czkawka.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view: "czkawka"
+    networks:
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true
