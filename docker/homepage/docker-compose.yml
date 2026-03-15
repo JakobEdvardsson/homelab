@@ -11,8 +11,6 @@ services:
       - 10.0.0.1
     env_file:
       - .env
-    ports:
-      - "${HOMEPAGE_PUBLISHED_PORT}:3000"
     environment:
       TZ: ${TZ}
       HOMEPAGE_ALLOWED_HOSTS: homepage.${BASE_DOMAIN}

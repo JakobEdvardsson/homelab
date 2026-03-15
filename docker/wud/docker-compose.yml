@@ -33,8 +33,6 @@ services:
       - .env
     depends_on:
       - wud-docker-socket-proxy
-    ports:
-      - "${WUD_PUBLISHED_PORT}:3000"
     environment:
       TZ: ${TZ}
       WUD_WATCHER_LOCAL_HOST: wud-docker-socket-proxy

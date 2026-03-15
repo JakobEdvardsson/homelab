@@ -6,8 +6,6 @@ services:
     image: jlesage/czkawka:latest
     restart: unless-stopped
     shm_size: "1gb"
-    ports:
-      - "${CZKAWKA_PUBLISHED_PORT}:5800"
     environment:
       TZ: ${TZ}
       USER_ID: ${PUID}

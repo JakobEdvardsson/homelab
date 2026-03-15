@@ -64,9 +64,6 @@ services:
       AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL}
       AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.1}
-    ports:
-      - ${COMPOSE_PORT_HTTP:-9000}:9000
-      - ${COMPOSE_PORT_HTTPS:-9443}:9443
     restart: unless-stopped
     shm_size: 512mb
     volumes:

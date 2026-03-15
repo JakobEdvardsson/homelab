@@ -7,8 +7,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - "${PROMETHEUS_PUBLISHED_PORT}:9090"
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
@@ -37,8 +35,6 @@ services:
       GF_SERVER_ROOT_URL: https://grafana.${BASE_DOMAIN}
       GF_SERVER_DOMAIN: grafana.${BASE_DOMAIN}
       GF_SERVER_SERVE_FROM_SUB_PATH: "false"
-    ports:
-      - "${GRAFANA_PUBLISHED_PORT}:3000"
     volumes:
       - ${APPDATA_ROOT}/grafana:/var/lib/grafana
     labels:
@@ -64,8 +60,6 @@ services:
       ALLOWED_HOSTS: healthchecks.${BASE_DOMAIN}
       DB: sqlite
       DB_NAME: /data/hc.sqlite
-    ports:
-      - "${HEALTHCHECKS_PUBLISHED_PORT}:8000"
     volumes:
       - ${APPDATA_ROOT}/healthchecks:/data
     labels:

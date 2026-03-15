@@ -22,8 +22,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
-    ports:
-      - "${IMMICH_PUBLISHED_PORT}:2283"
     depends_on:
       - redis
       - database
