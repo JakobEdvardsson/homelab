@@ -53,6 +53,11 @@
         href: https://czkawka.edvardsson.dev
         siteMonitor: https://czkawka.edvardsson.dev
         description: Duplicate file finder
+    - WUD:
+        icon: mdi-update
+        href: https://wud.edvardsson.dev
+        siteMonitor: https://wud.edvardsson.dev
+        description: Container update monitor
     - Grafana:
         icon: grafana
         href: https://grafana.edvardsson.dev

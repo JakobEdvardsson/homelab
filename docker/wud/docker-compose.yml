@@ -1,0 +1,61 @@
+name: wud
+
+services:
+  wud-docker-socket-proxy:
+    container_name: wud-docker-socket-proxy
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      EVENTS: 1
+      IMAGES: 1
+      INFO: 1
+      POST: 1
+      ALLOW_START: 1
+      ALLOW_STOP: 1
+      ALLOW_RESTARTS: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "wud"
+    networks:
+      - default
+
+  wud:
+    container_name: wud
+    image: getwud/wud:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - wud-docker-socket-proxy
+    ports:
+      - "${WUD_PUBLISHED_PORT}:3000"
+    environment:
+      TZ: ${TZ}
+      WUD_WATCHER_LOCAL_HOST: wud-docker-socket-proxy
+      WUD_WATCHER_LOCAL_PORT: 2375
+      WUD_STORE_PATH: /store
+      WUD_AUTH_OIDC_AUTHENTIK_CLIENTID: ${WUD_AUTH_OIDC_AUTHENTIK_CLIENTID}
+      WUD_AUTH_OIDC_AUTHENTIK_CLIENTSECRET: ${WUD_AUTH_OIDC_AUTHENTIK_CLIENTSECRET}
+      WUD_AUTH_OIDC_AUTHENTIK_DISCOVERY: ${WUD_AUTH_OIDC_AUTHENTIK_DISCOVERY}
+      WUD_AUTH_OIDC_AUTHENTIK_REDIRECT: ${WUD_AUTH_OIDC_AUTHENTIK_REDIRECT}
+    volumes:
+      - ${APPDATA_ROOT}/wud:/store
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whats-up-docker.png"
+      net.unraid.docker.webui: "https://wud.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view3: "wud"
+    networks:
+      - default
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

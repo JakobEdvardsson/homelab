@@ -50,6 +50,11 @@
 		reverse_proxy http://czkawka:5800
 	}
 
+	@wud host wud.{$BASE_DOMAIN}
+	handle @wud {
+		reverse_proxy http://wud:3000
+	}
+
 	@ugreen host ugreen.{$BASE_DOMAIN}
 	handle @ugreen {
 		reverse_proxy https://ugreen.{$TAILNET_DOMAIN}:9443 {
