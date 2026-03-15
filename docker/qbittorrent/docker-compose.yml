@@ -1,0 +1,26 @@
+name: qbittorrent
+
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    network_mode: "container:gluetun"
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      WEBUI_PORT: 8080
+      TORRENTING_PORT: ${QBITTORRENT_TORRENTING_PORT}
+    volumes:
+      - ${APPDATA_ROOT}/qbittorrent:/config
+      - ${DOWNLOADS_ROOT}:/downloads
+      - /mnt/user/data_fast:/data_fast
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png"
+      net.unraid.docker.webui: "https://qbittorrent.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view3: "qbittorrent"

@@ -99,25 +99,6 @@ services:
     networks:
       - caddy_internal
 
-  deluge-exporter:
-    container_name: deluge-exporter
-    image: pescuma/deluge-exporter:latest
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      DELUGE_ADDR: gluetun
-      DELUGE_PORT: 58846
-      DELUGE_PASSWORD: ${DELUGE_PASSWORD}
-    labels:
-      net.unraid.docker.managed: "composeman"
-      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
-      net.unraid.docker.webui: ""
-      net.unraid.docker.shell: "sh"
-      folder.view3: "monitoring"
-    networks:
-      - caddy_internal
-
   immich-exporter:
     container_name: immich-exporter
     image: friendlyfriend/prometheus-immich-exporter:latest

@@ -13,11 +13,6 @@ scrape_configs:
       - targets:
           - prometheus:9090
 
-  - job_name: deluge
-    static_configs:
-      - targets:
-          - deluge-exporter:9354
-
   - job_name: immich
     static_configs:
       - targets:

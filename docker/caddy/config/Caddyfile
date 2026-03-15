@@ -73,39 +73,10 @@
 		reverse_proxy http://ugreen.{$TAILNET_DOMAIN}:9898
 	}
 
-	@jellyfin host jellyfin.{$BASE_DOMAIN}
-	handle @jellyfin {
-		reverse_proxy http://jellyfin:8096
-	}
-
-	@jellyseerr host jellyseerr.{$BASE_DOMAIN}
-	handle @jellyseerr {
-		reverse_proxy http://jellyseerr:5055
-	}
-
-	@prowlarr host prowlarr.{$BASE_DOMAIN}
-	handle @prowlarr {
-		reverse_proxy http://prowlarr:9696
-	}
-
-	@radarr host radarr.{$BASE_DOMAIN}
-	handle @radarr {
-		reverse_proxy http://radarr:7878
-	}
-
-	@sonarr host sonarr.{$BASE_DOMAIN}
-	handle @sonarr {
-		reverse_proxy http://sonarr:8989
-	}
-
-	@bazarr host bazarr.{$BASE_DOMAIN}
-	handle @bazarr {
-		reverse_proxy http://bazarr:6767
-	}
-
-	@deluge host deluge.{$BASE_DOMAIN}
-	handle @deluge {
-		reverse_proxy http://gluetun:8112
+	@qbittorrent host qbittorrent.{$BASE_DOMAIN}
+	handle @qbittorrent {
+		import authentik
+		reverse_proxy http://gluetun:8080
 	}
 
 	@immich host immich.{$BASE_DOMAIN}

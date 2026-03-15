@@ -11,8 +11,8 @@ Each stack directory is Compose Manager-friendly:
 
 - `caddy`: reverse proxy and wildcard TLS
 - `homepage`: dashboard with service and external links
-- `media`: Jellyfin and the Arr apps
-- `deluge-vpn`: Deluge routed through a VPN sidecar
+- `gluetun`: VPN sidecar network namespace
+- `qbittorrent`: torrent client routed through Gluetun
 - `immich`: Immich app, ML, Redis, and Postgres
 - `monitoring`: Prometheus, Grafana, Healthchecks, and exporters
 - `dockge`: optional compose UI managing the same stack directories
@@ -44,8 +44,8 @@ make homepage.up
 6. Start the application stacks:
 
 ```bash
-make media.up
-make deluge-vpn.up
+make gluetun.up
+make qbittorrent.up
 make immich.up
 make monitoring.up
 ```
@@ -69,9 +69,8 @@ The example env file is already written for standard Unraid-style `/mnt/user/...
 
 ## Notes
 
-- Jellyfin hardware acceleration expects `/dev/dri` to exist on the Unraid host.
-- Deluge uses `gluetun` as the practical equivalent of the old NixOS VPN namespace setup.
-- Gluetun needs `FIREWALL_INPUT_PORTS` open for sidecar-accessed services such as Deluge WebUI and the daemon port.
+- qBittorrent uses the `gluetun` container network namespace via `network_mode: container:gluetun`.
+- Gluetun needs the qBittorrent WebUI and torrenting ports in `FIREWALL_INPUT_PORTS`.
 - The Caddy stack assumes you want wildcard certs through Cloudflare DNS.
 - The homepage stack includes external links for Unraid, UniFi, and the two Backrest endpoints from the old setup.
 - Healthchecks still needs an explicit superuser bootstrap step:
