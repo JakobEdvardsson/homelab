@@ -129,6 +129,6 @@
 	}
 
 	handle {
-		redir https://homepage.{$BASE_DOMAIN}{uri} permanent
+		respond "Not found" 404
 	}
 }
