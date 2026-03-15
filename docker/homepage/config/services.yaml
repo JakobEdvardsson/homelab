@@ -11,6 +11,11 @@
         href: https://qbittorrent.edvardsson.dev
         siteMonitor: https://qbittorrent.edvardsson.dev
         description: Torrent client
+    - Mousehole:
+        icon: mdi-mouse
+        href: https://mousehole.edvardsson.dev
+        siteMonitor: https://mousehole.edvardsson.dev
+        description: MAM seedbox IP updater
 
 - Services:
     - Authentik:

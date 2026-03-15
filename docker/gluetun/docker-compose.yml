@@ -20,9 +20,12 @@ services:
       FIREWALL_INPUT_PORTS: ${QBITTORRENT_PUBLISHED_PORT},${QBITTORRENT_TORRENTING_PORT}
       FIREWALL_OUTBOUND_SUBNETS: 10.0.0.0/24
     ports:
+      - "${MOUSEHOLE_PORT}:${MOUSEHOLE_PORT}"
       - "${QBITTORRENT_PUBLISHED_PORT}:8080"
       - "${QBITTORRENT_TORRENTING_PORT}:${QBITTORRENT_TORRENTING_PORT}"
       - "${QBITTORRENT_TORRENTING_PORT}:${QBITTORRENT_TORRENTING_PORT}/udp"
+    volumes:
+      - ${APPDATA_ROOT}/gluetun:/gluetun
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gluetun.png"

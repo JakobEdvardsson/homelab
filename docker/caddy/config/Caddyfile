@@ -79,6 +79,12 @@
 		reverse_proxy http://gluetun:8080
 	}
 
+	@mousehole host mousehole.{$BASE_DOMAIN}
+	handle @mousehole {
+		import authentik
+		reverse_proxy http://gluetun:5010
+	}
+
 	@immich host immich.{$BASE_DOMAIN}
 	handle @immich {
 		reverse_proxy http://immich_server:2283

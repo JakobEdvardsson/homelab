@@ -1,0 +1,22 @@
+name: mousehole
+
+services:
+  mousehole:
+    container_name: mousehole
+    image: tmmrtn/mousehole:latest
+    restart: unless-stopped
+    network_mode: "container:gluetun"
+    env_file:
+      - .env
+    environment:
+      TZ: ${TZ}
+      MOUSEHOLE_PORT: ${MOUSEHOLE_PORT}
+      MOUSEHOLE_STATE_DIR_PATH: /srv/mousehole
+    volumes:
+      - ${APPDATA_ROOT}/mousehole:/srv/mousehole
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://api.iconify.design/mdi/mouse.svg"
+      net.unraid.docker.webui: "https://mousehole.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view3: "mousehole"
