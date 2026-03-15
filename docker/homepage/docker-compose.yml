@@ -18,6 +18,7 @@ services:
       HOMEPAGE_ALLOWED_HOSTS: homepage.${BASE_DOMAIN}
     volumes:
       - ./config:/app/config
+      - ${APPDATA_ROOT}/homepage/logs:/app/config/logs
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png"
