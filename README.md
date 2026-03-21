@@ -25,3 +25,32 @@ The main NixOS to Unraid substitutions are:
 - homepage external links now point at Unraid and the other appliances directly
 
 Start with [`docker/README.md`](/home/jakobe/code/homelab/docker/README.md) and copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
+
+## GitHub Actions Deploy
+
+This repo includes a generic changed-stack deployment workflow:
+
+- [deploy-changed-stacks.yml](/home/jakobe/code/homelab/.github/workflows/deploy-changed-stacks.yml)
+- [deploy-changed-stacks.sh](/home/jakobe/code/homelab/scripts/deploy-changed-stacks.sh)
+
+It connects the GitHub runner to your tailnet with Tailscale, SSHes to the homelab host, pulls this repo on the server, diffs the pushed commit range, and reconciles only the changed Compose stacks.
+
+Deployment rule:
+
+- a changed stack is deployed only if its `autostart` file contains `true`, or if that stack is already running on the host
+- before pulling, the script marks the checkout as a trusted Git directory with `git config --global --add safe.directory <repo>`
+- the deploy aborts if the server checkout has uncommitted changes or local commits that are not on `origin/main`
+- if `folderview/docker.json` changes, the deploy also copies it to `/boot/config/plugins/folder.view/docker.json`
+
+Required GitHub repository secrets:
+
+- `TS_OAUTH_CLIENT_ID`
+- `TS_OAUTH_SECRET`
+- `HOMELAB_TAILSCALE_HOST`
+- `HOMELAB_SSH_USER`
+- `HOMELAB_SSH_PRIVATE_KEY`
+- `HOMELAB_REPO_DIR`
+
+Typical `HOMELAB_REPO_DIR`:
+
+- `/mnt/user/appdata/homelab`
