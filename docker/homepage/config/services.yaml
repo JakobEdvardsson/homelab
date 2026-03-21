@@ -48,6 +48,11 @@
         href: https://healthchecks.edvardsson.dev
         siteMonitor: https://healthchecks.edvardsson.dev
         description: Cron job monitoring
+    - Booli:
+        icon: mdi-home-search
+        href: https://booli.edvardsson.dev
+        siteMonitor: https://booli.edvardsson.dev
+        description: Booli web UI
 
 - External:
     - Unraid:

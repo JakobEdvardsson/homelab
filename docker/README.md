@@ -11,6 +11,7 @@ Each stack directory is Compose Manager-friendly:
 
 - `caddy`: reverse proxy and wildcard TLS
 - `homepage`: dashboard with service and external links
+- `booli`: Booli scraper, API, web UI, and worker services
 - `gluetun`: VPN sidecar network namespace
 - `qbittorrent`: torrent client routed through Gluetun
 - `immich`: Immich app, ML, Redis, and Postgres
@@ -44,6 +45,7 @@ make homepage.up
 6. Start the application stacks:
 
 ```bash
+make booli.up
 make gluetun.up
 make qbittorrent.up
 make immich.up
@@ -82,3 +84,4 @@ docker compose run healthchecks /opt/healthchecks/manage.py createsuperuser --em
 
 - Immich's upstream compose currently includes a `healthcheck.start_interval` on Postgres, but the Immich Unraid docs call out that Unraid's Docker Engine 24.x does not support that field. This repo leaves it out on purpose.
 - Dockge points at the same `docker/` folder as the stack root, so do not manage the same stack from both Dockge and Compose Manager at the same time.
+- Grafana dashboards are provisioned automatically from [`monitoring/grafana`](/home/jakobe/code/homelab/docker/monitoring/grafana), including the Booli dashboard.

@@ -114,6 +114,12 @@
 		reverse_proxy http://healthchecks:8000
 	}
 
+	@booli host booli.{$BASE_DOMAIN}
+	handle @booli {
+		import authentik
+		reverse_proxy http://booli-web:3000
+	}
+
 	handle {
 		respond "Not found" 404
 	}
