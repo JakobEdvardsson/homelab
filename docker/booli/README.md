@@ -46,7 +46,14 @@ This stores:
 - downloaded listing images
 - any other local booli runtime data
 
-Grafana dashboard provisioning is automatic through the monitoring stack.
+Grafana dashboard and alert provisioning are automatic through the monitoring stack.
+
+Booli alerts are Grafana-managed and routed through the `GRAFANA_DISCORD_WEBHOOK` value in `docker/.env`. After changing alert provisioning or the webhook, recreate Grafana:
+
+```bash
+cd docker/monitoring
+docker compose up -d --force-recreate grafana
+```
 
 The source dashboard JSON also lives at:
 

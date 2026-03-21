@@ -85,3 +85,4 @@ docker compose run healthchecks /opt/healthchecks/manage.py createsuperuser --em
 - Immich's upstream compose currently includes a `healthcheck.start_interval` on Postgres, but the Immich Unraid docs call out that Unraid's Docker Engine 24.x does not support that field. This repo leaves it out on purpose.
 - Dockge points at the same `docker/` folder as the stack root, so do not manage the same stack from both Dockge and Compose Manager at the same time.
 - Grafana dashboards are provisioned automatically from [`monitoring/grafana`](/home/jakobe/code/homelab/docker/monitoring/grafana), including the Booli dashboard.
+- Grafana alerting is also provisioned from the same directory. Set `GRAFANA_DISCORD_WEBHOOK` in `docker/.env`, then recreate Grafana after alerting changes.
