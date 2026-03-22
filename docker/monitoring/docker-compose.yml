@@ -4,6 +4,10 @@ services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -26,6 +30,10 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -51,6 +59,10 @@ services:
   healthchecks:
     container_name: healthchecks
     image: healthchecks/healthchecks:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -76,6 +88,10 @@ services:
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     command:
       - --path.procfs=/host/proc
@@ -98,6 +114,10 @@ services:
   immich-exporter:
     container_name: immich-exporter
     image: friendlyfriend/prometheus-immich-exporter:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env

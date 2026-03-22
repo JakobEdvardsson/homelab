@@ -6,8 +6,9 @@ services:
       context: .
     restart: unless-stopped
     dns:
-      - 100.100.100.100
-      - 10.0.0.1
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     ports:
       - "80:80"
       - "443:443"

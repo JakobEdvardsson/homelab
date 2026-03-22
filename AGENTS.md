@@ -17,7 +17,7 @@ When adding a new service to this repo:
    - Whenever [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json) changes, copy it to the live Unraid plugin path because `/boot` is FAT32 and cannot use symlinks:
 
 ```bash
-cp /mnt/user/appdata/homelab/folderview/docker.json /boot/config/plugins/folder.view/docker.json
+cp /mnt/user/appdata/homelab/folderview/docker.json /boot/config/plugins/folder.view3/docker.json
 ```
 7. For every stack directory, symlink the shared `.env` file into the stack directory:
 

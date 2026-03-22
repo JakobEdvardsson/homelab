@@ -22,27 +22,28 @@ Each stack directory is Compose Manager-friendly:
 
 1. Copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
 2. Adjust the Unraid paths, domain, Cloudflare token, and VPN settings.
-3. Create the shared Docker network:
+3. If Docker's embedded DNS cannot resolve external names on Unraid, keep the explicit `DOCKER_DNS_*` values in `docker/.env`.
+4. Create the shared Docker network:
 
 ```bash
 docker network create caddy_internal
 ```
 
-4. Create symlinks for `.env` files:
+5. Create symlinks for `.env` files:
 
 ```bash
 cd docker
 make env
 ```
 
-5. Start the base services first:
+6. Start the base services first:
 
 ```bash
 make caddy.up
 make homepage.up
 ```
 
-6. Start the application stacks:
+7. Start the application stacks:
 
 ```bash
 make booli.up
@@ -52,7 +53,7 @@ make immich.up
 make monitoring.up
 ```
 
-7. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
+8. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
 
 ```bash
 make dockge.up
@@ -86,3 +87,4 @@ docker compose run healthchecks /opt/healthchecks/manage.py createsuperuser --em
 - Dockge points at the same `docker/` folder as the stack root, so do not manage the same stack from both Dockge and Compose Manager at the same time.
 - Grafana dashboards are provisioned automatically from [`monitoring/grafana`](/home/jakobe/code/homelab/docker/monitoring/grafana), including the Booli dashboard.
 - Grafana alerting is also provisioned from the same directory. Set `GRAFANA_DISCORD_WEBHOOK` in `docker/.env`, then recreate Grafana after alerting changes.
+- The full deploy workflow reconciles any stack with `autostart=true`, `enabled=true`, or an already-running Compose project. It also pulls profiled services with `docker compose --profile '*' pull` before `up -d`.

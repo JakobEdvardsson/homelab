@@ -4,6 +4,10 @@ services:
   czkawka:
     container_name: czkawka
     image: jlesage/czkawka:latest
+    dns:
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     restart: unless-stopped
     shm_size: "1gb"
     environment:

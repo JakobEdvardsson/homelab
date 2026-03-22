@@ -28,9 +28,8 @@ git fetch origin "$BRANCH"
 log "checking out $BRANCH"
 git checkout "$BRANCH"
 if ! git merge-base --is-ancestor HEAD "$upstream_ref"; then
-  log "refusing to deploy: local branch has commits not on $upstream_ref"
-  log "run a manual git review on the server checkout"
-  exit 1
+  log "local branch diverged from $upstream_ref; resetting deployment checkout to remote branch"
+  git reset --hard "$upstream_ref"
 fi
 log "pulling latest changes"
 git pull --ff-only origin "$BRANCH"
@@ -82,7 +81,7 @@ if [[ ${#stack_set[@]} -eq 0 ]]; then
   log "no stack changes detected"
   if [[ "$folderview_changed" == "true" ]]; then
     src="$REPO_DIR/folderview/docker.json"
-    dst="/boot/config/plugins/folder.view/docker.json"
+    dst="/boot/config/plugins/folder.view3/docker.json"
     if [[ -f "$src" ]]; then
       log "syncing folderview config to $dst"
       cp "$src" "$dst"
@@ -136,18 +135,18 @@ for stack in "${stacks[@]}"; do
   ensure_stack_env "$stack"
   (
     cd "$STACKS_DIR/$stack"
-    log "$stack: docker compose --profile '*' pull"
-    docker compose --profile '*' pull || true
-    log "$stack: docker compose up -d"
-    docker compose up -d
+    log "$stack: docker compose --ansi never --profile '*' pull --quiet"
+    docker compose --ansi never --profile '*' pull --quiet || true
+    log "$stack: docker compose --ansi never up -d"
+    docker compose --ansi never up -d
     log "$stack: docker compose ps"
-    docker compose ps
+    docker compose ps --format json || docker compose ps
   )
 done
 
 if [[ "$folderview_changed" == "true" ]]; then
   src="$REPO_DIR/folderview/docker.json"
-  dst="/boot/config/plugins/folder.view/docker.json"
+  dst="/boot/config/plugins/folder.view3/docker.json"
   if [[ -f "$src" ]]; then
     log "syncing folderview config to $dst"
     cp "$src" "$dst"

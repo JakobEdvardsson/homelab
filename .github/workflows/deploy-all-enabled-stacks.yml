@@ -1,17 +1,10 @@
-name: Deploy Changed Stacks
+name: Deploy All Enabled Stacks
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - docker/**
-      - scripts/deploy-changed-stacks.sh
-      - .github/workflows/deploy-changed-stacks.yml
   workflow_dispatch:
 
 concurrency:
-  group: deploy-changed-stacks
+  group: deploy-all-enabled-stacks
   cancel-in-progress: false
 
 jobs:
@@ -29,7 +22,7 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
 
-      - name: Deploy changed stacks
+      - name: Deploy all enabled stacks
         env:
           SSH_PRIVATE_KEY: ${{ secrets.HOMELAB_SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.HOMELAB_SSH_KNOWN_HOSTS }}
@@ -37,8 +30,6 @@ jobs:
           HOMELAB_USER: ${{ secrets.HOMELAB_SSH_USER }}
           REPO_DIR: ${{ secrets.HOMELAB_REPO_DIR }}
           BRANCH: main
-          BEFORE_SHA: ${{ github.event.before }}
-          AFTER_SHA: ${{ github.sha }}
         run: |
           install -d -m 700 "$HOME/.ssh"
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
@@ -46,11 +37,11 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
-          echo "[deploy] connecting to $HOMELAB_USER@$HOMELAB_HOST"
+          echo "[deploy-all] connecting to $HOMELAB_USER@$HOMELAB_HOST"
           ssh -T \
             -i "$HOME/.ssh/id_ed25519" \
             -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
             "$HOMELAB_USER@$HOMELAB_HOST" \
-            "set -euxo pipefail; REPO_DIR='$REPO_DIR' BRANCH='$BRANCH' BEFORE_SHA='$BEFORE_SHA' AFTER_SHA='$AFTER_SHA' bash -s" \
-            < ./scripts/deploy-changed-stacks.sh
+            "set -euxo pipefail; REPO_DIR='$REPO_DIR' BRANCH='$BRANCH' bash -s" \
+            < ./scripts/deploy-all-enabled-stacks.sh
