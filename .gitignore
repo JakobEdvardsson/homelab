@@ -2,5 +2,3 @@
 /docker/.env
 # Ignore data folder
 /data
-# Ignore generated Unraid Compose Manager state
-/docker/*/autostart

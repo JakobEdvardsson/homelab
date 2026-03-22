@@ -30,5 +30,6 @@ Do not leave this as a manual post-step. The `.env` symlink should exist in git 
 
 8. If the stack should be managed through the helper targets, add it to [`docker/Makefile`](/home/jakobe/code/homelab/docker/Makefile).
 9. For every new stack directory, add a matching boolean `workflow_dispatch` input and selection line to [`deploy-selected-stacks.yml`](/home/jakobe/code/homelab/.github/workflows/deploy-selected-stacks.yml) so the manual deploy UI stays in sync with the available stacks.
+10. If a stack should start automatically, commit an `autostart` file with the contents `true`. Do not rely on an ignored local file for deploy behavior.
 
 Assume the shared env file is [`docker/.env`](/home/jakobe/code/homelab/docker/.env) unless there is a strong reason to isolate a stack's secrets.
