@@ -93,7 +93,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: time() - max(booli_scraper_last_success_unixtime_seconds{run_type="active"})
+              expr: time() - max(booli_scraper_last_activity_unixtime_seconds{run_type="active"})
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -146,8 +146,8 @@ groups:
         execErrState: Alerting
         for: 10m
         annotations:
-          summary: Booli scraper has not succeeded recently
-          description: No successful active scraper run has been observed for more than two hours.
+          summary: Booli scraper is stale
+          description: No active scraper activity has been observed for more than two hours.
         labels:
           service: booli
           severity: critical
@@ -390,7 +390,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: time() - max(booli_status_last_success_unixtime_seconds)
+              expr: time() - max(booli_status_last_activity_unixtime_seconds)
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -443,8 +443,8 @@ groups:
         execErrState: Alerting
         for: 30m
         annotations:
-          summary: Booli sold-status worker has not succeeded recently
-          description: No successful sold-status worker run has been observed for more than 12 hours.
+          summary: Booli sold-status worker is stale
+          description: No sold-status worker activity has been observed for more than 12 hours.
         labels:
           service: booli
           severity: warning

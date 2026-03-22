@@ -70,11 +70,11 @@
       },
       "targets": [
         {
-          "expr": "time() - max(booli_scraper_last_success_unixtime_seconds{run_type=\"active\"})",
+          "expr": "time() - max(booli_scraper_last_activity_unixtime_seconds{run_type=\"active\"})",
           "refId": "A"
         }
       ],
-      "title": "Seconds Since Last Successful Scrape",
+      "title": "Seconds Since Last Active Scrape Activity",
       "type": "stat"
     },
     {
@@ -129,7 +129,7 @@
           "refId": "A"
         }
       ],
-      "title": "Last Listings Scraped",
+      "title": "Last Active Listings Scraped",
       "type": "stat"
     },
     {
@@ -172,7 +172,7 @@
           "refId": "A"
         }
       ],
-      "title": "Last Scrape Duration",
+      "title": "Last Active Scrape Duration",
       "type": "stat"
     },
     {
@@ -583,6 +583,189 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.1",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 2592000
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 36
+      },
+      "targets": [
+        {
+          "expr": "time() - max(booli_scraper_last_activity_unixtime_seconds{run_type=\"sold_history\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Seconds Since Last Sold-History Activity"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.1",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 36
+      },
+      "targets": [
+        {
+          "expr": "max(booli_scraper_last_listings_scraped{run_type=\"sold_history\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Sold-History Listings Scraped"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.1",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 36
+      },
+      "targets": [
+        {
+          "expr": "max(booli_scraper_last_run_duration_seconds{run_type=\"sold_history\"})",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Sold-History Duration"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -609,7 +792,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 36
+        "y": 40
       },
       "options": {
         "colorMode": "background",
@@ -627,11 +810,11 @@
       },
       "targets": [
         {
-          "expr": "time() - max(booli_status_last_success_unixtime_seconds)",
+          "expr": "time() - max(booli_status_last_activity_unixtime_seconds)",
           "refId": "A"
         }
       ],
-      "title": "Seconds Since Last Successful Status Check",
+      "title": "Seconds Since Last Status Activity",
       "type": "stat"
     },
     {
@@ -665,7 +848,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 36
+        "y": 40
       },
       "options": {
         "colorMode": "background",
@@ -695,6 +878,67 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.1",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 40
+      },
+      "targets": [
+        {
+          "expr": "max(booli_status_last_run_duration_seconds)",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Status Duration"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -708,7 +952,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 44
       },
       "options": {
         "legend": {
@@ -755,7 +999,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 44
       },
       "options": {
         "legend": {
