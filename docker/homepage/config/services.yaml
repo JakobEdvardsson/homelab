@@ -1,11 +1,26 @@
-- Media:
+- Core:
     - Immich:
         icon: immich
         href: https://immich.edvardsson.dev
         siteMonitor: https://immich.edvardsson.dev
         description: Self-hosted photo and video management solution
+    - Authentik:
+        icon: authentik
+        href: https://authentik.edvardsson.dev
+        siteMonitor: https://authentik.edvardsson.dev
+        description: Identity provider and forward-auth gateway
+    - Homepage:
+        icon: homepage
+        href: https://homepage.edvardsson.dev
+        siteMonitor: https://homepage.edvardsson.dev
+        description: Main service dashboard
+    - Unraid:
+        icon: unraid
+        href: https://unraid.edvardsson.dev
+        siteMonitor: https://unraid.edvardsson.dev
+        description: Unraid host UI
 
-- Downloads:
+- Media & Downloads:
     - qBittorrent:
         icon: qbittorrent
         href: https://qbittorrent.edvardsson.dev
@@ -16,23 +31,18 @@
         href: https://mousehole.edvardsson.dev
         siteMonitor: https://mousehole.edvardsson.dev
         description: MAM seedbox IP updater
-
-- Services:
-    - Authentik:
-        icon: authentik
-        href: https://authentik.edvardsson.dev
-        siteMonitor: https://authentik.edvardsson.dev
-        description: Identity provider and forward-auth gateway
     - Czkawka:
         icon: mdi-content-duplicate
         href: https://czkawka.edvardsson.dev
         siteMonitor: https://czkawka.edvardsson.dev
         description: Duplicate file finder
-    - WUD:
-        icon: mdi-update
-        href: https://wud.edvardsson.dev
-        siteMonitor: https://wud.edvardsson.dev
-        description: Container update monitor
+    - Booli:
+        icon: mdi-home-search
+        href: https://booli.edvardsson.dev
+        siteMonitor: https://booli.edvardsson.dev
+        description: Booli web UI
+
+- Monitoring & Ops:
     - Grafana:
         icon: grafana
         href: https://grafana.edvardsson.dev
@@ -48,23 +58,18 @@
         href: https://healthchecks.edvardsson.dev
         siteMonitor: https://healthchecks.edvardsson.dev
         description: Cron job monitoring
-    - Booli:
-        icon: mdi-home-search
-        href: https://booli.edvardsson.dev
-        siteMonitor: https://booli.edvardsson.dev
-        description: Booli web UI
+    - WUD:
+        icon: mdi-update
+        href: https://wud.edvardsson.dev
+        siteMonitor: https://wud.edvardsson.dev
+        description: Container update monitor
+
+- Utilities & External:
     - IT Tools:
         icon: mdi-tools
         href: https://it-tools.edvardsson.dev
         siteMonitor: https://it-tools.edvardsson.dev
         description: Handy tools for developers and sysadmins
-
-- External:
-    - Unraid:
-        icon: unraid
-        href: https://unraid.edvardsson.dev
-        siteMonitor: https://unraid.edvardsson.dev
-        description: Unraid host UI
     - Dockge:
         icon: mdi-docker
         href: https://dockge.edvardsson.dev

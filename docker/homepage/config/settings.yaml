@@ -2,16 +2,17 @@ title: Homelab
 headerStyle: clean
 statusStyle: dot
 hideVersion: true
+maxGroupColumns: 4
 layout:
-  Media:
+  Core:
     header: true
     style: column
-  Arr:
+  Media & Downloads:
     header: true
     style: column
-  Services:
+  Monitoring & Ops:
     header: true
     style: column
-  External:
+  Utilities & External:
     header: true
     style: column
