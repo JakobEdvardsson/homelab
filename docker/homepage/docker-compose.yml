@@ -6,10 +6,6 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     user: "${PUID}:${PGID}"
     restart: unless-stopped
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     env_file:
       - .env
     environment:

@@ -4,10 +4,6 @@ services:
   docker-socket-proxy:
     container_name: authentik-docker-socket-proxy
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     environment:
       CONTAINERS: 1
@@ -42,10 +38,6 @@ services:
         - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
       timeout: 5s
     image: docker.io/library/postgres:16-alpine
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     volumes:
       - ${APPDATA_ROOT}/authentik/postgresql:/var/lib/postgresql/data
@@ -72,10 +64,6 @@ services:
       AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL}
       AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.1}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     shm_size: 512mb
     volumes:
@@ -105,10 +93,6 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.2.1}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     shm_size: 512mb
     user: root
@@ -122,6 +106,8 @@ services:
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
       folder.view3: "authentik"
+    networks:
+      - default
 
 networks:
   caddy_internal:

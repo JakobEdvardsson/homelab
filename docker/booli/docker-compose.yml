@@ -4,10 +4,6 @@ services:
   booli-neo4j:
     container_name: booli-neo4j
     image: neo4j:2025.01.0-community
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -41,15 +37,10 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
   booli-api:
     container_name: booli-api
     image: ghcr.io/jakobedvardsson/booli-scraper-api:${BOOLI_IMAGE_TAG}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -80,15 +71,10 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
   booli-web:
     container_name: booli-web
     image: ghcr.io/jakobedvardsson/booli-scraper-web:${BOOLI_IMAGE_TAG}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -118,10 +104,6 @@ services:
   booli-pushgateway:
     container_name: booli-pushgateway
     image: prom/pushgateway:v1.11.2
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9091/-/healthy >/dev/null 2>&1 || exit 1"]
@@ -137,15 +119,10 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
   booli-scraper:
     container_name: booli-scraper
     image: ghcr.io/jakobedvardsson/booli-scraper-scraper:${BOOLI_IMAGE_TAG}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -188,15 +165,10 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
   booli-status:
     container_name: booli-status
     image: ghcr.io/jakobedvardsson/booli-scraper-status:${BOOLI_IMAGE_TAG}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -233,15 +205,10 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
   booli-sold-history:
     container_name: booli-sold-history
     image: ghcr.io/jakobedvardsson/booli-scraper-sold-history:${BOOLI_IMAGE_TAG}
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     profiles:
       - manual
     env_file:
@@ -274,7 +241,6 @@ services:
       folder.view3: "booli"
     networks:
       - default
-      - caddy_internal
 
 networks:
   caddy_internal:

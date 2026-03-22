@@ -4,10 +4,6 @@ services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -25,15 +21,12 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "monitoring"
     networks:
+      - default
       - caddy_internal
 
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -54,15 +47,12 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "monitoring"
     networks:
+      - default
       - caddy_internal
 
   healthchecks:
     container_name: healthchecks
     image: healthchecks/healthchecks:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -83,15 +73,12 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "monitoring"
     networks:
+      - default
       - caddy_internal
 
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     command:
       - --path.procfs=/host/proc
@@ -109,15 +96,11 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "monitoring"
     networks:
-      - caddy_internal
+      - default
 
   immich-exporter:
     container_name: immich-exporter
     image: friendlyfriend/prometheus-immich-exporter:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env
@@ -133,7 +116,7 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "monitoring"
     networks:
-      - caddy_internal
+      - default
 
 networks:
   caddy_internal:

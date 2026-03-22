@@ -4,10 +4,6 @@ services:
   wud-docker-socket-proxy:
     container_name: wud-docker-socket-proxy
     image: ghcr.io/tecnativa/docker-socket-proxy:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     environment:
       CONTAINERS: 1
@@ -32,10 +28,6 @@ services:
   wud:
     container_name: wud
     image: getwud/wud:latest
-    dns:
-      - ${DOCKER_DNS_1}
-      - ${DOCKER_DNS_2}
-      - ${DOCKER_DNS_3}
     restart: unless-stopped
     env_file:
       - .env

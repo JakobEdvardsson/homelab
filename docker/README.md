@@ -22,28 +22,27 @@ Each stack directory is Compose Manager-friendly:
 
 1. Copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
 2. Adjust the Unraid paths, domain, Cloudflare token, and VPN settings.
-3. If Docker's embedded DNS cannot resolve external names on Unraid, keep the explicit `DOCKER_DNS_*` values in `docker/.env`.
-4. Create the shared Docker network:
+3. Create the shared Docker network:
 
 ```bash
 docker network create caddy_internal
 ```
 
-5. Create symlinks for `.env` files:
+4. Create symlinks for `.env` files:
 
 ```bash
 cd docker
 make env
 ```
 
-6. Start the base services first:
+5. Start the base services first:
 
 ```bash
 make caddy.up
 make homepage.up
 ```
 
-7. Start the application stacks:
+6. Start the application stacks:
 
 ```bash
 make booli.up
@@ -53,7 +52,7 @@ make immich.up
 make monitoring.up
 ```
 
-8. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
+7. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
 
 ```bash
 make dockge.up
