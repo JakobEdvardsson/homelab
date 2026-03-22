@@ -27,5 +27,6 @@ ln -sf ../.env .env
 ```
 
 8. If the stack should be managed through the helper targets, add it to [`docker/Makefile`](/home/jakobe/code/homelab/docker/Makefile).
+9. For every new stack directory, add a matching boolean `workflow_dispatch` input and selection line to [`deploy-selected-stacks.yml`](/home/jakobe/code/homelab/.github/workflows/deploy-selected-stacks.yml) so the manual deploy UI stays in sync with the available stacks.
 
 Assume the shared env file is [`docker/.env`](/home/jakobe/code/homelab/docker/.env) unless there is a strong reason to isolate a stack's secrets.

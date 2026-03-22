@@ -1,0 +1,130 @@
+name: Deploy Selected Stacks
+
+on:
+  workflow_dispatch:
+    inputs:
+      authentik:
+        description: "Deploy authentik"
+        required: false
+        type: boolean
+        default: false
+      booli:
+        description: "Deploy booli"
+        required: false
+        type: boolean
+        default: false
+      caddy:
+        description: "Deploy caddy"
+        required: false
+        type: boolean
+        default: false
+      czkawka:
+        description: "Deploy czkawka"
+        required: false
+        type: boolean
+        default: false
+      dockge:
+        description: "Deploy dockge"
+        required: false
+        type: boolean
+        default: false
+      gluetun:
+        description: "Deploy gluetun"
+        required: false
+        type: boolean
+        default: false
+      homepage:
+        description: "Deploy homepage"
+        required: false
+        type: boolean
+        default: false
+      immich:
+        description: "Deploy immich"
+        required: false
+        type: boolean
+        default: false
+      monitoring:
+        description: "Deploy monitoring"
+        required: false
+        type: boolean
+        default: false
+      mousehole:
+        description: "Deploy mousehole"
+        required: false
+        type: boolean
+        default: false
+      qbittorrent:
+        description: "Deploy qbittorrent"
+        required: false
+        type: boolean
+        default: false
+      wud:
+        description: "Deploy wud"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-selected-stacks
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Connect to tailnet
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Deploy selected stacks
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.HOMELAB_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.HOMELAB_SSH_KNOWN_HOSTS }}
+          HOMELAB_HOST: ${{ secrets.HOMELAB_TAILSCALE_HOST }}
+          HOMELAB_USER: ${{ secrets.HOMELAB_SSH_USER }}
+          REPO_DIR: ${{ secrets.HOMELAB_REPO_DIR }}
+          BRANCH: main
+        run: |
+          selected_stacks=()
+          [[ "${{ github.event.inputs.authentik }}" == "true" ]] && selected_stacks+=("authentik")
+          [[ "${{ github.event.inputs.booli }}" == "true" ]] && selected_stacks+=("booli")
+          [[ "${{ github.event.inputs.caddy }}" == "true" ]] && selected_stacks+=("caddy")
+          [[ "${{ github.event.inputs.czkawka }}" == "true" ]] && selected_stacks+=("czkawka")
+          [[ "${{ github.event.inputs.dockge }}" == "true" ]] && selected_stacks+=("dockge")
+          [[ "${{ github.event.inputs.gluetun }}" == "true" ]] && selected_stacks+=("gluetun")
+          [[ "${{ github.event.inputs.homepage }}" == "true" ]] && selected_stacks+=("homepage")
+          [[ "${{ github.event.inputs.immich }}" == "true" ]] && selected_stacks+=("immich")
+          [[ "${{ github.event.inputs.monitoring }}" == "true" ]] && selected_stacks+=("monitoring")
+          [[ "${{ github.event.inputs.mousehole }}" == "true" ]] && selected_stacks+=("mousehole")
+          [[ "${{ github.event.inputs.qbittorrent }}" == "true" ]] && selected_stacks+=("qbittorrent")
+          [[ "${{ github.event.inputs.wud }}" == "true" ]] && selected_stacks+=("wud")
+
+          if [[ ${#selected_stacks[@]} -eq 0 ]]; then
+            echo "[deploy-selected] no stacks selected"
+            exit 1
+          fi
+
+          SELECTED_STACKS="$(printf '%s ' "${selected_stacks[@]}" | sed 's/[[:space:]]*$//')"
+
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+          echo "[deploy-selected] stacks: $SELECTED_STACKS"
+          echo "[deploy-selected] connecting to $HOMELAB_USER@$HOMELAB_HOST"
+          ssh -T \
+            -i "$HOME/.ssh/id_ed25519" \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            "$HOMELAB_USER@$HOMELAB_HOST" \
+            "set -euxo pipefail; REPO_DIR='$REPO_DIR' BRANCH='$BRANCH' SELECTED_STACKS='$SELECTED_STACKS' bash -s" \
+            < ./scripts/deploy-selected-stacks.sh

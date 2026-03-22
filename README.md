@@ -34,6 +34,8 @@ This repo includes a generic changed-stack deployment workflow:
 - [deploy-changed-stacks.sh](/home/jakobe/code/homelab/scripts/deploy-changed-stacks.sh)
 - [deploy-all-enabled-stacks.yml](/home/jakobe/code/homelab/.github/workflows/deploy-all-enabled-stacks.yml)
 - [deploy-all-enabled-stacks.sh](/home/jakobe/code/homelab/scripts/deploy-all-enabled-stacks.sh)
+- [deploy-selected-stacks.yml](/home/jakobe/code/homelab/.github/workflows/deploy-selected-stacks.yml)
+- [deploy-selected-stacks.sh](/home/jakobe/code/homelab/scripts/deploy-selected-stacks.sh)
 
 It connects the GitHub runner to your tailnet with Tailscale, SSHes to the homelab host, pulls this repo on the server, diffs the pushed commit range, and reconciles only the changed Compose stacks.
 
@@ -58,6 +60,12 @@ For each eligible stack it runs:
 
 - `docker compose --profile '*' pull`
 - `docker compose up -d`
+
+There is also a manual selected-stack workflow:
+
+- `Deploy Selected Stacks`
+
+It exposes one checkbox per stack in the GitHub UI and reconciles only the stacks you select, regardless of `autostart` or `enabled`.
 
 Required GitHub repository secrets:
 
