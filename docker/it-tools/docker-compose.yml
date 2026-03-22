@@ -1,0 +1,20 @@
+name: it-tools
+
+services:
+  it-tools:
+    container_name: it-tools
+    image: corentinth/it-tools:latest
+    restart: unless-stopped
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://api.iconify.design/mdi:tools.svg"
+      net.unraid.docker.webui: "https://it-tools.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view3: "it-tools"
+    networks:
+      - default
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

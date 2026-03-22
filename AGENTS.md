@@ -19,12 +19,14 @@ When adding a new service to this repo:
 ```bash
 cp /mnt/user/appdata/homelab/folderview/docker.json /boot/config/plugins/folder.view3/docker.json
 ```
-7. For every stack directory, symlink the shared `.env` file into the stack directory:
+7. For every stack directory, commit a stack-local symlink from `.env` to the shared env file so the repo already contains:
 
 ```bash
 cd /home/jakobe/code/homelab/docker/<stack>
 ln -sf ../.env .env
 ```
+
+Do not leave this as a manual post-step. The `.env` symlink should exist in git for every stack unless there is a strong reason not to share the root env file.
 
 8. If the stack should be managed through the helper targets, add it to [`docker/Makefile`](/home/jakobe/code/homelab/docker/Makefile).
 9. For every new stack directory, add a matching boolean `workflow_dispatch` input and selection line to [`deploy-selected-stacks.yml`](/home/jakobe/code/homelab/.github/workflows/deploy-selected-stacks.yml) so the manual deploy UI stays in sync with the available stacks.

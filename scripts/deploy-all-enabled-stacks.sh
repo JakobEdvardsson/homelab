@@ -15,9 +15,19 @@ is_true() {
   [[ "$raw" == "true" ]]
 }
 
+flag_file_value() {
+  local path="$1"
+  if [[ ! -f "$path" ]]; then
+    return 1
+  fi
+  tr -d '\r' < "$path" | xargs
+}
+
 flag_file_true() {
   local path="$1"
-  [[ -f "$path" ]] && is_true "$(cat "$path")"
+  local value
+  value="$(flag_file_value "$path")" || return 1
+  is_true "$value"
 }
 
 stack_should_autostart() {
@@ -87,23 +97,31 @@ for stack in "${stacks[@]}"; do
   autostart=false
   enabled=false
   running=false
+  autostart_value="<missing>"
+  enabled_value="<missing>"
 
   if stack_should_autostart "$stack"; then
     autostart=true
   fi
+  if value="$(flag_file_value "$STACKS_DIR/$stack/autostart")"; then
+    autostart_value="$value"
+  fi
   if stack_is_enabled "$stack"; then
     enabled=true
+  fi
+  if value="$(flag_file_value "$STACKS_DIR/$stack/enabled")"; then
+    enabled_value="$value"
   fi
   if stack_is_running "$stack"; then
     running=true
   fi
 
   if [[ "$autostart" != "true" && "$enabled" != "true" && "$running" != "true" ]]; then
-    log "skipping $stack (autostart=false enabled=false running=false)"
+    log "skipping $stack (autostart=$autostart raw_autostart=$autostart_value enabled=$enabled raw_enabled=$enabled_value running=$running)"
     continue
   fi
 
-  log "reconciling $stack (autostart=$autostart enabled=$enabled running=$running)"
+  log "reconciling $stack (autostart=$autostart raw_autostart=$autostart_value enabled=$enabled raw_enabled=$enabled_value running=$running)"
   ensure_stack_env "$stack"
   (
     cd "$STACKS_DIR/$stack"

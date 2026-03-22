@@ -53,6 +53,11 @@
         href: https://booli.edvardsson.dev
         siteMonitor: https://booli.edvardsson.dev
         description: Booli web UI
+    - IT Tools:
+        icon: mdi-tools
+        href: https://it-tools.edvardsson.dev
+        siteMonitor: https://it-tools.edvardsson.dev
+        description: Handy tools for developers and sysadmins
 
 - External:
     - Unraid:

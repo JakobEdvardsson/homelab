@@ -96,10 +96,20 @@ is_true() {
   [[ "$raw" == "true" ]]
 }
 
+flag_file_value() {
+  local path="$1"
+  if [[ ! -f "$path" ]]; then
+    return 1
+  fi
+  tr -d '\r' < "$path" | xargs
+}
+
 stack_should_autostart() {
   local stack="$1"
   local file="$REPO_DIR/docker/$stack/autostart"
-  [[ -f "$file" ]] && is_true "$(cat "$file")"
+  local value
+  value="$(flag_file_value "$file")" || return 1
+  is_true "$value"
 }
 
 stack_is_running() {
@@ -119,19 +129,23 @@ log "changed stacks: ${stacks[*]}"
 for stack in "${stacks[@]}"; do
   autostart=false
   running=false
+  autostart_value="<missing>"
   if stack_should_autostart "$stack"; then
     autostart=true
+  fi
+  if value="$(flag_file_value "$REPO_DIR/docker/$stack/autostart")"; then
+    autostart_value="$value"
   fi
   if stack_is_running "$stack"; then
     running=true
   fi
 
   if [[ "$autostart" != "true" && "$running" != "true" ]]; then
-    log "skipping $stack (autostart=false and not running)"
+    log "skipping $stack (autostart=$autostart raw_autostart=$autostart_value running=$running)"
     continue
   fi
 
-  log "reconciling $stack (autostart=$autostart running=$running)"
+  log "reconciling $stack (autostart=$autostart raw_autostart=$autostart_value running=$running)"
   ensure_stack_env "$stack"
   (
     cd "$STACKS_DIR/$stack"

@@ -43,6 +43,11 @@ on:
         required: false
         type: boolean
         default: false
+      it-tools:
+        description: "Deploy it-tools"
+        required: false
+        type: boolean
+        default: false
       monitoring:
         description: "Deploy monitoring"
         required: false
@@ -101,6 +106,7 @@ jobs:
           [[ "${{ github.event.inputs.gluetun }}" == "true" ]] && selected_stacks+=("gluetun")
           [[ "${{ github.event.inputs.homepage }}" == "true" ]] && selected_stacks+=("homepage")
           [[ "${{ github.event.inputs.immich }}" == "true" ]] && selected_stacks+=("immich")
+          [[ "${{ github.event.inputs.it-tools }}" == "true" ]] && selected_stacks+=("it-tools")
           [[ "${{ github.event.inputs.monitoring }}" == "true" ]] && selected_stacks+=("monitoring")
           [[ "${{ github.event.inputs.mousehole }}" == "true" ]] && selected_stacks+=("mousehole")
           [[ "${{ github.event.inputs.qbittorrent }}" == "true" ]] && selected_stacks+=("qbittorrent")
