@@ -37,6 +37,7 @@ services:
       folder.view3: "booli"
     networks:
       - default
+      - monitoring
 
   booli-api:
     container_name: booli-api
@@ -71,6 +72,7 @@ services:
       folder.view3: "booli"
     networks:
       - default
+      - monitoring
 
   booli-web:
     container_name: booli-web
@@ -119,6 +121,7 @@ services:
       folder.view3: "booli"
     networks:
       - default
+      - monitoring
 
   booli-scraper:
     container_name: booli-scraper
@@ -244,4 +247,6 @@ services:
 
 networks:
   caddy_internal:
+    external: true
+  monitoring:
     external: true

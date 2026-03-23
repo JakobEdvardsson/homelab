@@ -26,13 +26,10 @@ services:
       net.unraid.docker.shell: "sh"
       folder.view3: "caddy"
     networks:
-      dmz:
+      default:
       caddy_internal:
 
 networks:
-  dmz:
-    name: dmz
-    driver: bridge
   caddy_internal:
     name: caddy_internal
     driver: bridge

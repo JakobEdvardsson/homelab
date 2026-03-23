@@ -23,6 +23,7 @@ services:
     networks:
       - default
       - caddy_internal
+      - monitoring
 
   grafana:
     container_name: grafana
@@ -49,6 +50,7 @@ services:
     networks:
       - default
       - caddy_internal
+      - monitoring
 
   healthchecks:
     container_name: healthchecks
@@ -75,6 +77,7 @@ services:
     networks:
       - default
       - caddy_internal
+      - monitoring
 
   node-exporter:
     container_name: node-exporter
@@ -97,6 +100,7 @@ services:
       folder.view3: "monitoring"
     networks:
       - default
+      - monitoring
 
   immich-exporter:
     container_name: immich-exporter
@@ -117,7 +121,12 @@ services:
       folder.view3: "monitoring"
     networks:
       - default
+      - monitoring
 
 networks:
   caddy_internal:
     external: true
+  monitoring:
+    name: monitoring
+    driver: bridge
+    internal: true
