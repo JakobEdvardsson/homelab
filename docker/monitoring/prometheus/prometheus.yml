@@ -18,6 +18,11 @@ scrape_configs:
       - targets:
           - immich-exporter:9183
 
+  - job_name: cadvisor
+    static_configs:
+      - targets:
+          - cadvisor:8080
+
   - job_name: booli_api
     metrics_path: /metrics
     static_configs:

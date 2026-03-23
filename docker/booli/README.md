@@ -18,6 +18,8 @@ cd docker/booli
 docker compose --profile manual run --rm booli-sold-history
 ```
 
+The sold-history Grafana panels only populate after that importer has run at least once. The Pushgateway state is persisted so those metrics survive later service restarts.
+
 Neo4j Browser:
 
 ```text

@@ -107,12 +107,17 @@ services:
     container_name: booli-pushgateway
     image: prom/pushgateway:v1.11.2
     restart: unless-stopped
+    command:
+      - --persistence.file=/data/metrics.db
+      - --persistence.interval=1m
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9091/-/healthy >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5
       start_period: 10s
+    volumes:
+      - ${APPDATA_ROOT}/booli/pushgateway:/data
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"

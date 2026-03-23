@@ -74,7 +74,7 @@
           "refId": "A"
         }
       ],
-      "title": "Seconds Since Last Active Scrape Activity",
+      "title": "Time Since Last Active Scrape Activity",
       "type": "stat"
     },
     {
@@ -190,10 +190,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 6,
-        "x": 18,
-        "y": 0
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
       },
       "options": {
         "legend": {
@@ -235,7 +235,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 4
+        "y": 16
       },
       "options": {
         "legend": {
@@ -282,7 +282,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 4
+        "y": 16
       },
       "options": {
         "legend": {
@@ -334,7 +334,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 12
+        "y": 24
       },
       "options": {
         "legend": {
@@ -386,7 +386,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 24
       },
       "options": {
         "legend": {
@@ -428,7 +428,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 32
       },
       "options": {
         "legend": {
@@ -470,7 +470,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 20
+        "y": 32
       },
       "options": {
         "legend": {
@@ -486,7 +486,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(booli_api_http_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(booli_api_http_requests_total[5m])), 1)",
+          "expr": "(sum(rate(booli_api_http_requests_total{status=~\"5..\"}[5m])) or vector(0)) / clamp_min((sum(rate(booli_api_http_requests_total[5m])) or vector(0)), 1)",
           "legendFormat": "5xx ratio",
           "refId": "A"
         }
@@ -512,7 +512,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 40
       },
       "options": {
         "legend": {
@@ -554,7 +554,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 40
       },
       "options": {
         "legend": {
@@ -629,7 +629,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 36
+        "y": 48
       },
       "targets": [
         {
@@ -637,7 +637,7 @@
           "refId": "A"
         }
       ],
-      "title": "Seconds Since Last Sold-History Activity"
+      "title": "Time Since Last Sold-History Activity"
     },
     {
       "datasource": {
@@ -690,7 +690,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 36
+        "y": 48
       },
       "targets": [
         {
@@ -751,7 +751,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 36
+        "y": 48
       },
       "targets": [
         {
@@ -792,7 +792,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 40
+        "y": 4
       },
       "options": {
         "colorMode": "background",
@@ -814,7 +814,7 @@
           "refId": "A"
         }
       ],
-      "title": "Seconds Since Last Status Activity",
+      "title": "Time Since Last Status Activity",
       "type": "stat"
     },
     {
@@ -848,7 +848,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 40
+        "y": 4
       },
       "options": {
         "colorMode": "background",
@@ -924,7 +924,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 40
+        "y": 4
       },
       "targets": [
         {
@@ -952,7 +952,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 56
       },
       "options": {
         "legend": {
@@ -999,7 +999,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 44
+        "y": 56
       },
       "options": {
         "legend": {

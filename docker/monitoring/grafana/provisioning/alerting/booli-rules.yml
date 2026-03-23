@@ -70,7 +70,7 @@ groups:
               refId: C
               type: threshold
         noDataState: NoData
-        execErrState: Alerting
+        execErrState: Error
         for: 5m
         annotations:
           summary: Booli scraper failed recently
@@ -142,8 +142,8 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: Alerting
-        execErrState: Alerting
+        noDataState: NoData
+        execErrState: Error
         for: 10m
         annotations:
           summary: Booli scraper is stale
@@ -216,7 +216,7 @@ groups:
               refId: C
               type: threshold
         noDataState: NoData
-        execErrState: Alerting
+        execErrState: Error
         for: 15m
         annotations:
           summary: Booli scraper returned no listings
@@ -289,7 +289,7 @@ groups:
               refId: C
               type: threshold
         noDataState: NoData
-        execErrState: Alerting
+        execErrState: Error
         for: 10m
         annotations:
           summary: Booli image downloads are failing
@@ -367,7 +367,7 @@ groups:
               refId: C
               type: threshold
         noDataState: NoData
-        execErrState: Alerting
+        execErrState: Error
         for: 15m
         annotations:
           summary: Booli sold-status worker failed recently
@@ -439,8 +439,8 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: Alerting
-        execErrState: Alerting
+        noDataState: NoData
+        execErrState: Error
         for: 30m
         annotations:
           summary: Booli sold-status worker is stale
@@ -468,7 +468,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: (sum(rate(booli_api_http_requests_total{status=~"5.."}[5m])) / clamp_min(sum(rate(booli_api_http_requests_total[5m])), 1))
+              expr: ((sum(rate(booli_api_http_requests_total{status=~"5.."}[5m])) or vector(0)) / clamp_min((sum(rate(booli_api_http_requests_total[5m])) or vector(0)), 1))
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -518,7 +518,7 @@ groups:
               refId: C
               type: threshold
         noDataState: NoData
-        execErrState: Alerting
+        execErrState: Error
         for: 10m
         annotations:
           summary: Booli API 5xx rate is elevated
