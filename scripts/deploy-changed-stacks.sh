@@ -123,6 +123,11 @@ ensure_stack_env() {
   ln -sf ../.env "$stack_dir/.env"
 }
 
+stack_needs_force_recreate() {
+  local stack_dir="$1"
+  grep -Eq '^[[:space:]]*network_mode:[[:space:]]*"container:' "$stack_dir/docker-compose.yml"
+}
+
 mapfile -t stacks < <(printf '%s\n' "${!stack_set[@]}" | sort)
 log "changed stacks: ${stacks[*]}"
 
@@ -149,10 +154,15 @@ for stack in "${stacks[@]}"; do
   ensure_stack_env "$stack"
   (
     cd "$STACKS_DIR/$stack"
+    up_args=(-d)
+    if stack_needs_force_recreate "$STACKS_DIR/$stack"; then
+      up_args+=(--force-recreate)
+      log "$stack: forcing recreate because it uses network_mode=container:*"
+    fi
     log "$stack: docker compose --ansi never --profile '*' pull --quiet"
     docker compose --ansi never --profile '*' pull --quiet || true
-    log "$stack: docker compose --ansi never up -d"
-    docker compose --ansi never up -d
+    log "$stack: docker compose --ansi never up ${up_args[*]}"
+    docker compose --ansi never up "${up_args[@]}"
     log "$stack: docker compose ps"
     docker compose ps --format json || docker compose ps
   )
