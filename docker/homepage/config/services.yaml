@@ -27,7 +27,7 @@
         siteMonitor: https://qbittorrent.edvardsson.dev
         description: Torrent client
     - Mousehole:
-        icon: mdi-mouse
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mousehole.png
         href: https://mousehole.edvardsson.dev
         siteMonitor: https://mousehole.edvardsson.dev
         description: MAM seedbox IP updater

@@ -15,7 +15,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/mousehole:/srv/mousehole
     labels:
-      net.unraid.docker.icon: "https://api.iconify.design/mdi/mouse.svg"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mousehole.png"
       net.unraid.docker.webui: "https://mousehole.edvardsson.dev"
       net.unraid.docker.shell: "sh"
-      folder.view3: "mousehole"
+      folder.view3: "qbittorrent"
