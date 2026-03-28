@@ -13,14 +13,14 @@ groups:
           - refId: A
             datasourceUid: prometheus
             relativeTimeRange:
-              from: 1800
+              from: 7200
               to: 0
             model:
               datasource:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: sum(increase(booli_scraper_runs_total{run_type="active",status="error"}[30m]))
+              expr: sum(increase(booli_scraper_runs_total{run_type="active",status="error"}[2h]))
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -51,8 +51,8 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 0
-                    type: gt
+                      - 2
+                    type: gte
                   operator:
                     type: and
                   query:
@@ -69,12 +69,12 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 5m
         annotations:
           summary: Booli scraper failed recently
-          description: At least one active scraper run has failed in the last 30 minutes.
+          description: At least two active scraper runs have failed in the last two hours.
         labels:
           service: booli
           severity: critical
@@ -142,7 +142,7 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 10m
         annotations:
@@ -152,21 +152,21 @@ groups:
           service: booli
           severity: critical
 
-      - uid: booli_scraper_empty
-        title: Booli scraper returned no listings
+      - uid: booli_scraper_no_success
+        title: Booli scraper has not completed successfully recently
         condition: C
         data:
           - refId: A
             datasourceUid: prometheus
             relativeTimeRange:
-              from: 3600
+              from: 7200
               to: 0
             model:
               datasource:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: max(booli_scraper_last_listings_scraped{run_type="active"})
+              expr: time() - max(booli_scraper_last_success_unixtime_seconds{run_type="active"})
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -197,8 +197,8 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 1
-                    type: lt
+                      - 7200
+                    type: gt
                   operator:
                     type: and
                   query:
@@ -215,15 +215,15 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
-        for: 15m
+        for: 10m
         annotations:
-          summary: Booli scraper returned no listings
-          description: The latest active scraper run returned zero listings.
+          summary: Booli scraper has not completed successfully recently
+          description: No successful active scraper run has completed in the last two hours.
         labels:
           service: booli
-          severity: warning
+          severity: critical
 
       - uid: booli_image_failures
         title: Booli image downloads failing
@@ -239,7 +239,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m]))
+              expr: (sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])) >= 5) and ((sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])) / clamp_min(sum(increase(booli_scraper_images_downloaded_total{run_type="active"}[30m])) + sum(increase(booli_scraper_images_reused_total{run_type="active"}[30m])) + sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])), 1)) > 0.2)
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -288,12 +288,12 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 10m
         annotations:
           summary: Booli image downloads are failing
-          description: One or more listing images failed to download in the last 30 minutes.
+          description: At least five image downloads have failed in the last 30 minutes and the failure ratio is above 20%.
         labels:
           service: booli
           severity: warning
@@ -366,7 +366,7 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 15m
         annotations:
@@ -439,7 +439,7 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 30m
         annotations:
@@ -468,7 +468,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: ((sum(rate(booli_api_http_requests_total{status=~"5.."}[5m])) or vector(0)) / clamp_min((sum(rate(booli_api_http_requests_total[5m])) or vector(0)), 1))
+              expr: (sum(increase(booli_api_http_requests_total[5m])) >= 20) and ((((sum(rate(booli_api_http_requests_total{status=~"5.."}[5m])) or vector(0)) / clamp_min((sum(rate(booli_api_http_requests_total[5m])) or vector(0)), 1))) > 0.05)
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -517,12 +517,12 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
+        noDataState: OK
         execErrState: Error
         for: 10m
         annotations:
           summary: Booli API 5xx rate is elevated
-          description: More than 5% of Booli API requests have returned 5xx over the last 5 minutes.
+          description: More than 5% of Booli API requests have returned 5xx over the last 5 minutes, with at least 20 requests in that window.
         labels:
           service: booli
           severity: warning
