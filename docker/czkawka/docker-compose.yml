@@ -14,7 +14,6 @@ services:
       - ${APPDATA_ROOT}/czkawka:/config
       - ${CZKAWKA_STORAGE_ROOT}:/storage
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/files.png"
       net.unraid.docker.webui: "https://czkawka.edvardsson.dev"
       net.unraid.docker.shell: "sh"

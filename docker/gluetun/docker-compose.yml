@@ -25,7 +25,6 @@ services:
     volumes:
       - ${APPDATA_ROOT}/gluetun:/gluetun
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gluetun.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"

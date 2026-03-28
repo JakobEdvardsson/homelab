@@ -19,7 +19,6 @@ services:
       - ${DOWNLOADS_ROOT}:/downloads
       - /mnt/user/data_fast:/data_fast
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png"
       net.unraid.docker.webui: "https://qbittorrent.edvardsson.dev"
       net.unraid.docker.shell: "sh"

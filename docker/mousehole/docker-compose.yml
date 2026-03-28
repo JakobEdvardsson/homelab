@@ -15,7 +15,6 @@ services:
     volumes:
       - ${APPDATA_ROOT}/mousehole:/srv/mousehole
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://api.iconify.design/mdi/mouse.svg"
       net.unraid.docker.webui: "https://mousehole.edvardsson.dev"
       net.unraid.docker.shell: "sh"

@@ -17,7 +17,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -45,7 +44,6 @@ services:
     volumes:
       - ${APPDATA_ROOT}/wud:/store
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whats-up-docker.png"
       net.unraid.docker.webui: "https://wud.edvardsson.dev"
       net.unraid.docker.shell: "sh"

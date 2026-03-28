@@ -29,7 +29,6 @@ services:
     healthcheck:
       disable: false
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
       net.unraid.docker.webui: "https://immich.edvardsson.dev"
       net.unraid.docker.shell: "sh"
@@ -54,7 +53,6 @@ services:
     healthcheck:
       disable: false
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/immich.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -71,7 +69,6 @@ services:
     volumes:
       - ${APPDATA_ROOT}/immich/redis:/data
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/redis.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -97,7 +94,6 @@ services:
     healthcheck:
       disable: false
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/postgres.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"

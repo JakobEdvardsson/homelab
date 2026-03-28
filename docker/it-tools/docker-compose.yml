@@ -6,7 +6,6 @@ services:
     image: corentinth/it-tools:latest
     restart: unless-stopped
     labels:
-      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://api.iconify.design/mdi:tools.svg"
       net.unraid.docker.webui: "https://it-tools.edvardsson.dev"
       net.unraid.docker.shell: "sh"
