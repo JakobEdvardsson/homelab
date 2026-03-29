@@ -185,7 +185,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "short"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -251,17 +251,17 @@
       },
       "targets": [
         {
-          "expr": "sum by (run_type) (increase(booli_scraper_runs_total{status=\"success\"}[24h]))",
-          "legendFormat": "{{run_type}} success",
+          "expr": "time() - max by (run_type) (booli_scraper_last_success_unixtime_seconds)",
+          "legendFormat": "{{run_type}} last success",
           "refId": "A"
         },
         {
-          "expr": "sum by (run_type) (increase(booli_scraper_runs_total{status=\"error\"}[24h]))",
-          "legendFormat": "{{run_type}} error",
+          "expr": "time() - max by (run_type) (booli_scraper_last_failure_unixtime_seconds)",
+          "legendFormat": "{{run_type}} last failure",
           "refId": "B"
         }
       ],
-      "title": "Scraper Runs (24h)",
+      "title": "Scraper Outcome Recency",
       "type": "timeseries"
     },
     {
@@ -274,7 +274,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "short"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -968,17 +968,17 @@
       },
       "targets": [
         {
-          "expr": "increase(booli_status_runs_total{status=\"success\"}[24h])",
-          "legendFormat": "success",
+          "expr": "time() - max(booli_status_last_success_unixtime_seconds)",
+          "legendFormat": "last success",
           "refId": "A"
         },
         {
-          "expr": "increase(booli_status_runs_total{status=\"error\"}[24h])",
-          "legendFormat": "error",
+          "expr": "time() - max(booli_status_last_failure_unixtime_seconds)",
+          "legendFormat": "last failure",
           "refId": "B"
         }
       ],
-      "title": "Status Worker Runs (24h)",
+      "title": "Status Worker Outcome Recency",
       "type": "timeseries"
     },
     {

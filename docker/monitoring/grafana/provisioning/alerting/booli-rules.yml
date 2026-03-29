@@ -20,7 +20,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: sum(increase(booli_scraper_runs_total{run_type="active",status="error"}[2h]))
+              expr: (time() - max(booli_scraper_last_failure_unixtime_seconds{run_type="active"}) < 7200) and (max(booli_scraper_last_failure_unixtime_seconds{run_type="active"}) > max(booli_scraper_last_success_unixtime_seconds{run_type="active"}))
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -51,8 +51,8 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 2
-                    type: gte
+                      - 0
+                    type: gt
                   operator:
                     type: and
                   query:
@@ -74,7 +74,7 @@ groups:
         for: 5m
         annotations:
           summary: Booli scraper failed recently
-          description: At least two active scraper runs have failed in the last two hours.
+          description: The most recent active scraper run failed within the last two hours.
         labels:
           service: booli
           severity: critical
@@ -317,7 +317,7 @@ groups:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: sum(increase(booli_status_runs_total{status="error"}[2h]))
+              expr: (time() - max(booli_status_last_failure_unixtime_seconds) < 7200) and (max(booli_status_last_failure_unixtime_seconds) > max(booli_status_last_success_unixtime_seconds))
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -371,7 +371,7 @@ groups:
         for: 15m
         annotations:
           summary: Booli sold-status worker failed recently
-          description: At least one sold-status worker run has failed in the last two hours.
+          description: The most recent sold-status worker run failed within the last two hours.
         labels:
           service: booli
           severity: warning
