@@ -48,6 +48,11 @@
         href: https://grafana.edvardsson.dev
         siteMonitor: https://grafana.edvardsson.dev
         description: Dashboarding tool
+    - Proxmox:
+        icon: proxmox
+        href: https://proxmox.edvardsson.dev
+        siteMonitor: https://proxmox.edvardsson.dev
+        description: Proxmox VE host UI
     - Prometheus:
         icon: prometheus
         href: https://prometheus.edvardsson.dev
