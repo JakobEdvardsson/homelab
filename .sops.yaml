@@ -1,0 +1,10 @@
+keys:
+  - &work age154em2r9t44m5d7gps0l0wku0spc0cxq3pu4xcfuk0lu5sytl9stscrnhy6
+  - &github_action age1wz5p5ty92lu44ucpw7prg7wktd6g05pmfx720qnhcjjyxmz3t3ysa5nxaz
+
+creation_rules:
+  - path_regex: secrets\.yaml$
+    key_groups:
+      - age:
+          - *work
+          - *github_action

@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_DIR="${REPO_DIR:-/mnt/user/appdata/homelab}"
 BRANCH="${BRANCH:-main}"
 STACKS_DIR="$REPO_DIR/docker"
+ENV_FILE="$STACKS_DIR/.env"
 SELECTED_STACKS="${SELECTED_STACKS:-}"
 
 log() {
@@ -12,6 +13,10 @@ log() {
 
 ensure_stack_env() {
   local stack="$1"
+  if [[ ! -f "$ENV_FILE" ]]; then
+    log "missing shared env file: $ENV_FILE"
+    exit 1
+  fi
   ln -sf ../.env "$STACKS_DIR/$stack/.env"
 }
 

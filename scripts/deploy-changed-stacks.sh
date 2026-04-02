@@ -5,6 +5,8 @@ REPO_DIR="${REPO_DIR:-/mnt/user/appdata/homelab}"
 BRANCH="${BRANCH:-main}"
 BEFORE_SHA="${BEFORE_SHA:-}"
 AFTER_SHA="${AFTER_SHA:-}"
+STACKS_DIR="$REPO_DIR/docker"
+ENV_FILE="$STACKS_DIR/.env"
 
 log() {
   printf '[deploy] %s\n' "$*"
@@ -34,7 +36,6 @@ fi
 log "pulling latest changes"
 git pull --ff-only origin "$BRANCH"
 
-STACKS_DIR="$REPO_DIR/docker"
 zero_sha='0000000000000000000000000000000000000000'
 changed_files=()
 
@@ -60,22 +61,37 @@ fi
 log "changed files:\n$(printf '  - %s\n' "${changed_files[@]}")"
 
 folderview_changed=false
+shared_env_changed=false
 for path in "${changed_files[@]}"; do
   if [[ "$path" == "folderview/docker.json" ]]; then
     folderview_changed=true
-    break
+  fi
+  if [[ "$path" == "secrets.yaml" || "$path" == ".sops.yaml" ]]; then
+    shared_env_changed=true
   fi
 done
 
 declare -A stack_set=()
-for path in "${changed_files[@]}"; do
-  if [[ "$path" =~ ^docker/([^/]+)/ ]]; then
-    stack="${BASH_REMATCH[1]}"
-    if [[ -f "$REPO_DIR/docker/$stack/docker-compose.yml" ]]; then
-      stack_set["$stack"]=1
+if [[ "$shared_env_changed" == "true" ]]; then
+  while IFS= read -r stack; do
+    [[ -n "$stack" ]] || continue
+    stack_set["$stack"]=1
+  done < <(
+    find "$STACKS_DIR" -mindepth 1 -maxdepth 1 -type d \
+      -exec test -f '{}/docker-compose.yml' ';' -print \
+      | xargs -r -n1 basename \
+      | sort
+  )
+else
+  for path in "${changed_files[@]}"; do
+    if [[ "$path" =~ ^docker/([^/]+)/ ]]; then
+      stack="${BASH_REMATCH[1]}"
+      if [[ -f "$REPO_DIR/docker/$stack/docker-compose.yml" ]]; then
+        stack_set["$stack"]=1
+      fi
     fi
-  fi
-done
+  done
+fi
 
 if [[ ${#stack_set[@]} -eq 0 ]]; then
   log "no stack changes detected"
@@ -120,6 +136,10 @@ stack_is_running() {
 ensure_stack_env() {
   local stack="$1"
   local stack_dir="$STACKS_DIR/$stack"
+  if [[ ! -f "$ENV_FILE" ]]; then
+    log "missing shared env file: $ENV_FILE"
+    exit 1
+  fi
   ln -sf ../.env "$stack_dir/.env"
 }
 
@@ -129,6 +149,9 @@ stack_needs_force_recreate() {
 }
 
 mapfile -t stacks < <(printf '%s\n' "${!stack_set[@]}" | sort)
+if [[ "$shared_env_changed" == "true" ]]; then
+  log "shared secrets changed; considering all stacks for reconciliation"
+fi
 log "changed stacks: ${stacks[*]}"
 
 for stack in "${stacks[@]}"; do

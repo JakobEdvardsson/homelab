@@ -81,6 +81,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install sops
+        run: |
+          SOPS_VERSION=3.12.2
+          curl -fsSL \
+            "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.amd64" \
+            -o /usr/local/bin/sops
+          chmod 755 /usr/local/bin/sops
+
       - name: Connect to tailnet
         uses: tailscale/github-action@v4
         with:
@@ -96,6 +104,7 @@ jobs:
           HOMELAB_USER: ${{ secrets.HOMELAB_SSH_USER }}
           REPO_DIR: ${{ secrets.HOMELAB_REPO_DIR }}
           BRANCH: main
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
         run: |
           selected_stacks=()
           [[ "${{ github.event.inputs.authentik }}" == "true" ]] && selected_stacks+=("authentik")
@@ -124,6 +133,21 @@ jobs:
           chmod 600 "$HOME/.ssh/id_ed25519"
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
+
+          env_file="$(mktemp)"
+          trap 'rm -f "$env_file"' EXIT
+          install -d -m 700 "$HOME/.config/sops/age"
+          printf '%s\n' "$SOPS_AGE_KEY" > "$HOME/.config/sops/age/keys.txt"
+          chmod 600 "$HOME/.config/sops/age/keys.txt"
+          sops -d --output-type dotenv secrets.yaml > "$env_file"
+          chmod 600 "$env_file"
+
+          scp \
+            -i "$HOME/.ssh/id_ed25519" \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            "$env_file" \
+            "$HOMELAB_USER@$HOMELAB_HOST:$REPO_DIR/docker/.env"
 
           echo "[deploy-selected] stacks: $SELECTED_STACKS"
           echo "[deploy-selected] connecting to $HOMELAB_USER@$HOMELAB_HOST"
