@@ -12,6 +12,7 @@ Each stack directory is Compose Manager-friendly:
 - `caddy`: reverse proxy and wildcard TLS
 - `homepage`: dashboard with service and external links
 - `booli`: Booli scraper, API, web UI, and worker services
+- `blocket`: Blocket scraper, API, web UI, and worker services
 - `gluetun`: VPN sidecar network namespace
 - `qbittorrent`: torrent client routed through Gluetun
 - `immich`: Immich app, ML, Redis, and Postgres
@@ -46,6 +47,7 @@ make homepage.up
 
 ```bash
 make booli.up
+make blocket.up
 make gluetun.up
 make qbittorrent.up
 make immich.up

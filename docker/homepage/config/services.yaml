@@ -41,6 +41,11 @@
         href: https://booli.edvardsson.dev
         siteMonitor: https://booli.edvardsson.dev
         description: Booli web UI
+    - Blocket:
+        icon: mdi-car-search
+        href: https://blocket.edvardsson.dev
+        siteMonitor: https://blocket.edvardsson.dev
+        description: Blocket vehicle search UI
 
 - Monitoring & Ops:
     - Grafana:

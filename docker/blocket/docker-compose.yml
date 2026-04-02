@@ -1,0 +1,176 @@
+name: blocket
+
+services:
+  blocket-neo4j:
+    container_name: blocket-neo4j
+    image: neo4j:2025.01.0-community
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NEO4J_AUTH: ${BLOCKET_NEO4J_USERNAME}/${BLOCKET_NEO4J_PASSWORD}
+      NEO4J_server_default__listen__address: 0.0.0.0
+      NEO4J_server_default__advertised__address: blocket-neo4j
+    ports:
+      - "${BLOCKET_NEO4J_HTTP_PUBLISHED_PORT:-7475}:7474"
+      - "${BLOCKET_NEO4J_BOLT_PUBLISHED_PORT:-7688}:7687"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "cypher-shell -a bolt://127.0.0.1:7687 -u \"$${NEO4J_AUTH%%/*}\" -p \"$${NEO4J_AUTH#*/}\" 'RETURN 1' >/dev/null 2>&1 || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 45s
+    volumes:
+      - ${APPDATA_ROOT}/blocket/neo4j/data:/data
+      - ${APPDATA_ROOT}/blocket/neo4j/logs:/logs
+      - ${APPDATA_ROOT}/blocket/neo4j/import:/var/lib/neo4j/import
+      - ${APPDATA_ROOT}/blocket/neo4j/plugins:/plugins
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/neo4j.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+      - monitoring
+
+  blocket-api:
+    container_name: blocket-api
+    image: ghcr.io/jakobedvardsson/blocket-scraper-api:${BLOCKET_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NEO4J_URI: ${BLOCKET_NEO4J_URI:-bolt://blocket-neo4j:7687}
+      NEO4J_USERNAME: ${BLOCKET_NEO4J_USERNAME}
+      NEO4J_PASSWORD: ${BLOCKET_NEO4J_PASSWORD}
+      NEO4J_DATABASE: ${BLOCKET_NEO4J_DATABASE:-neo4j}
+      NEO4J_SCHEMA_ENSURE_ENABLED: "true"
+    volumes:
+      - ${APPDATA_ROOT}/blocket/data:/app/data
+    depends_on:
+      blocket-neo4j:
+        condition: service_healthy
+    ports:
+      - "${BLOCKET_API_PUBLISHED_PORT:-8081}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ready >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/neo4j.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+      - monitoring
+
+  blocket-web:
+    container_name: blocket-web
+    image: ghcr.io/jakobedvardsson/blocket-scraper-web:${BLOCKET_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      INTERNAL_API_BASE_URL: http://blocket-api:8080
+    depends_on:
+      blocket-api:
+        condition: service_healthy
+    ports:
+      - "${BLOCKET_WEB_PUBLISHED_PORT:-3001}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+      - caddy_internal
+
+  blocket-pushgateway:
+    container_name: blocket-pushgateway
+    image: prom/pushgateway:v1.11.2
+    restart: unless-stopped
+    command:
+      - --persistence.file=/data/metrics.db
+      - --persistence.interval=1m
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9091/-/healthy >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ${APPDATA_ROOT}/blocket/pushgateway:/data
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+      - monitoring
+
+  blocket-scraper:
+    container_name: blocket-scraper
+    image: ghcr.io/jakobedvardsson/blocket-scraper-scraper:${BLOCKET_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NEO4J_URI: ${BLOCKET_NEO4J_URI:-bolt://blocket-neo4j:7687}
+      NEO4J_USERNAME: ${BLOCKET_NEO4J_USERNAME}
+      NEO4J_PASSWORD: ${BLOCKET_NEO4J_PASSWORD}
+      NEO4J_DATABASE: ${BLOCKET_NEO4J_DATABASE:-neo4j}
+      NEO4J_SCHEMA_ENSURE_ENABLED: "false"
+      SCRAPE_SEARCH_URL: ${BLOCKET_SCRAPE_SEARCH_URL}
+      SCRAPE_INTERVAL_SECONDS: ${BLOCKET_SCRAPE_INTERVAL_SECONDS:-3600}
+      SCRAPER_IMAGE_DOWNLOAD_ENABLED: ${BLOCKET_IMAGE_DOWNLOAD_ENABLED:-true}
+      SCRAPER_IMAGE_DOWNLOAD_TIMEOUT_SECONDS: ${BLOCKET_IMAGE_DOWNLOAD_TIMEOUT_SECONDS:-20}
+      SCRAPER_IMAGE_DOWNLOAD_RETRIES: ${BLOCKET_IMAGE_DOWNLOAD_RETRIES:-2}
+      SCRAPER_IMAGE_DOWNLOAD_VERBOSE: ${BLOCKET_IMAGE_DOWNLOAD_VERBOSE:-true}
+      PROMETHEUS_PUSHGATEWAY_URL: http://blocket-pushgateway:9091
+    depends_on:
+      blocket-neo4j:
+        condition: service_healthy
+      blocket-api:
+        condition: service_healthy
+      blocket-pushgateway:
+        condition: service_healthy
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Starting scraper scheduler; interval=$${SCRAPE_INTERVAL_SECONDS:-3600}s";
+        while true; do
+          /app/scrape || true;
+          sleep "$${SCRAPE_INTERVAL_SECONDS:-3600}";
+        done
+    volumes:
+      - ${APPDATA_ROOT}/blocket/data:/app/data
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+
+networks:
+  caddy_internal:
+    external: true
+  monitoring:
+    external: true

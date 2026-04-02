@@ -34,3 +34,15 @@ scrape_configs:
     static_configs:
       - targets:
           - booli-pushgateway:9091
+
+  - job_name: blocket_api
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - blocket-api:8080
+
+  - job_name: blocket_pushgateway
+    honor_labels: true
+    static_configs:
+      - targets:
+          - blocket-pushgateway:9091
