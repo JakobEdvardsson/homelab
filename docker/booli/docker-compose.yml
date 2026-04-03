@@ -1,6 +1,22 @@
 name: booli
 
 services:
+  booli-flaresolverr:
+    container_name: booli-flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: info
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: none
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "booli"
+    networks:
+      - default
+
   booli-neo4j:
     container_name: booli-neo4j
     image: neo4j:2025.01.0-community
@@ -142,8 +158,15 @@ services:
       SCRAPER_IMAGE_DOWNLOAD_TIMEOUT_SECONDS: ${BOOLI_IMAGE_DOWNLOAD_TIMEOUT_SECONDS}
       SCRAPER_IMAGE_DOWNLOAD_RETRIES: ${BOOLI_IMAGE_DOWNLOAD_RETRIES}
       SCRAPER_IMAGE_DOWNLOAD_VERBOSE: ${BOOLI_IMAGE_DOWNLOAD_VERBOSE}
+      SCRAPER_FETCH_BACKEND: ${BOOLI_SCRAPER_FETCH_BACKEND:-flaresolverr}
+      SCRAPER_FLARESOLVERR_URL: ${BOOLI_SCRAPER_FLARESOLVERR_URL:-http://booli-flaresolverr:8191}
+      SCRAPER_FLARESOLVERR_SESSION_ID: ${BOOLI_SCRAPER_FLARESOLVERR_SESSION_ID:-booli-scraper}
+      SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS: ${BOOLI_SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS:-120000}
+      SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES: ${BOOLI_SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES:-30}
       PROMETHEUS_PUSHGATEWAY_URL: http://booli-pushgateway:9091
     depends_on:
+      booli-flaresolverr:
+        condition: service_started
       booli-neo4j:
         condition: service_healthy
       booli-api:
@@ -181,8 +204,15 @@ services:
       NEO4J_PASSWORD: ${BOOLI_NEO4J_PASSWORD}
       NEO4J_DATABASE: ${BOOLI_NEO4J_DATABASE}
       STATUS_CHECK_INTERVAL_SECONDS: ${BOOLI_STATUS_CHECK_INTERVAL_SECONDS}
+      SCRAPER_FETCH_BACKEND: ${BOOLI_STATUS_FETCH_BACKEND:-flaresolverr}
+      SCRAPER_FLARESOLVERR_URL: ${BOOLI_SCRAPER_FLARESOLVERR_URL:-http://booli-flaresolverr:8191}
+      SCRAPER_FLARESOLVERR_SESSION_ID: ${BOOLI_STATUS_FLARESOLVERR_SESSION_ID:-booli-status}
+      SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS: ${BOOLI_SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS:-120000}
+      SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES: ${BOOLI_SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES:-30}
       PROMETHEUS_PUSHGATEWAY_URL: http://booli-pushgateway:9091
     depends_on:
+      booli-flaresolverr:
+        condition: service_started
       booli-neo4j:
         condition: service_healthy
       booli-api:
@@ -225,8 +255,15 @@ services:
       SCRAPER_IMAGE_DOWNLOAD_TIMEOUT_SECONDS: ${BOOLI_IMAGE_DOWNLOAD_TIMEOUT_SECONDS}
       SCRAPER_IMAGE_DOWNLOAD_RETRIES: ${BOOLI_IMAGE_DOWNLOAD_RETRIES}
       SCRAPER_IMAGE_DOWNLOAD_VERBOSE: ${BOOLI_IMAGE_DOWNLOAD_VERBOSE}
+      SCRAPER_FETCH_BACKEND: ${BOOLI_SOLD_HISTORY_FETCH_BACKEND:-flaresolverr}
+      SCRAPER_FLARESOLVERR_URL: ${BOOLI_SCRAPER_FLARESOLVERR_URL:-http://booli-flaresolverr:8191}
+      SCRAPER_FLARESOLVERR_SESSION_ID: ${BOOLI_SOLD_HISTORY_FLARESOLVERR_SESSION_ID:-booli-sold-history}
+      SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS: ${BOOLI_SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS:-120000}
+      SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES: ${BOOLI_SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES:-30}
       PROMETHEUS_PUSHGATEWAY_URL: http://booli-pushgateway:9091
     depends_on:
+      booli-flaresolverr:
+        condition: service_started
       booli-neo4j:
         condition: service_healthy
       booli-api:

@@ -1,6 +1,22 @@
 name: blocket
 
 services:
+  blocket-flaresolverr:
+    container_name: blocket-flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: info
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: none
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+
   blocket-neo4j:
     container_name: blocket-neo4j
     image: neo4j:2025.01.0-community
@@ -142,8 +158,15 @@ services:
       SCRAPER_IMAGE_DOWNLOAD_TIMEOUT_SECONDS: ${BLOCKET_IMAGE_DOWNLOAD_TIMEOUT_SECONDS:-20}
       SCRAPER_IMAGE_DOWNLOAD_RETRIES: ${BLOCKET_IMAGE_DOWNLOAD_RETRIES:-2}
       SCRAPER_IMAGE_DOWNLOAD_VERBOSE: ${BLOCKET_IMAGE_DOWNLOAD_VERBOSE:-true}
+      SCRAPER_FETCH_BACKEND: ${BLOCKET_SCRAPER_FETCH_BACKEND:-flaresolverr}
+      SCRAPER_FLARESOLVERR_URL: ${BLOCKET_SCRAPER_FLARESOLVERR_URL:-http://blocket-flaresolverr:8191}
+      SCRAPER_FLARESOLVERR_SESSION_ID: ${BLOCKET_SCRAPER_FLARESOLVERR_SESSION_ID:-blocket-scraper}
+      SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS: ${BLOCKET_SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS:-120000}
+      SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES: ${BLOCKET_SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES:-30}
       PROMETHEUS_PUSHGATEWAY_URL: http://blocket-pushgateway:9091
     depends_on:
+      blocket-flaresolverr:
+        condition: service_started
       blocket-neo4j:
         condition: service_healthy
       blocket-api:

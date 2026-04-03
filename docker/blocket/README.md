@@ -49,3 +49,10 @@ Set the scraper search URL through `BLOCKET_SCRAPE_SEARCH_URL` in the shared env
 ```text
 https://www.blocket.se/mobility/search/car?body_type=6&body_type=1&body_type=2&body_type=4&body_type=8&body_type=3&body_type=9&mileage_to=20000&price_to=700000&year_from=2020
 ```
+
+This stack also includes a local `blocket-flaresolverr` container and defaults the scraper to:
+
+- `SCRAPER_FETCH_BACKEND=flaresolverr`
+- `SCRAPER_FLARESOLVERR_URL=http://blocket-flaresolverr:8191`
+
+Override those env values if you want to force raw HTTP instead.

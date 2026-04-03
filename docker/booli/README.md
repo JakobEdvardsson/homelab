@@ -50,6 +50,13 @@ This stores:
 
 Grafana dashboard and alert provisioning are automatic through the monitoring stack.
 
+This stack now includes a local `booli-flaresolverr` container and defaults Booli fetch jobs to:
+
+- `SCRAPER_FETCH_BACKEND=flaresolverr`
+- `SCRAPER_FLARESOLVERR_URL=http://booli-flaresolverr:8191`
+
+Override these in env if you want to force raw HTTP instead.
+
 Booli alerts are Grafana-managed and routed through the `GRAFANA_DISCORD_WEBHOOK` value in `docker/.env`. After changing alert provisioning or the webhook, recreate Grafana:
 
 ```bash
