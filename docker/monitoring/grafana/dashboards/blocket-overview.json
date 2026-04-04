@@ -66,12 +66,14 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
       "targets": [
         {
-          "expr": "time() - max(blocket_scraper_last_activity_unixtime_seconds)",
-          "refId": "A"
+          "expr": "time() - max by (run_type) (blocket_scraper_last_activity_unixtime_seconds)",
+          "refId": "A",
+          "legendFormat": "{{run_type}}"
         }
       ],
       "title": "Time Since Last Scrape Activity",
@@ -121,12 +123,14 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
       "targets": [
         {
-          "expr": "max(blocket_scraper_last_listings_scraped)",
-          "refId": "A"
+          "expr": "max by (run_type) (blocket_scraper_last_listings_scraped)",
+          "refId": "A",
+          "legendFormat": "{{run_type}}"
         }
       ],
       "title": "Last Listings Scraped",
@@ -164,12 +168,14 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
       "targets": [
         {
-          "expr": "max(blocket_scraper_last_run_duration_seconds)",
-          "refId": "A"
+          "expr": "max by (run_type) (blocket_scraper_last_run_duration_seconds)",
+          "refId": "A",
+          "legendFormat": "{{run_type}}"
         }
       ],
       "title": "Last Scrape Duration",
@@ -223,12 +229,14 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name",
+        "wideLayout": true
       },
       "targets": [
         {
-          "expr": "max(blocket_scraper_last_detail_rejected)",
-          "refId": "A"
+          "expr": "max by (run_type) (blocket_scraper_last_detail_rejected)",
+          "refId": "A",
+          "legendFormat": "{{run_type}}"
         }
       ],
       "title": "Last Detail Rejected",
@@ -310,13 +318,13 @@
       },
       "targets": [
         {
-          "expr": "time() - max(blocket_scraper_last_success_unixtime_seconds)",
-          "legendFormat": "last success",
+          "expr": "time() - max by (run_type) (blocket_scraper_last_success_unixtime_seconds)",
+          "legendFormat": "{{run_type}} success",
           "refId": "A"
         },
         {
-          "expr": "time() - max(blocket_scraper_last_failure_unixtime_seconds)",
-          "legendFormat": "last failure",
+          "expr": "time() - max by (run_type) (blocket_scraper_last_failure_unixtime_seconds)",
+          "legendFormat": "{{run_type}} failure",
           "refId": "B"
         }
       ],
@@ -357,13 +365,13 @@
       },
       "targets": [
         {
-          "expr": "increase(blocket_scraper_requests_total[5m])",
-          "legendFormat": "{{phase}} requests",
+          "expr": "sum by (run_type, phase) (increase(blocket_scraper_requests_total[5m]))",
+          "legendFormat": "{{run_type}} {{phase}} requests",
           "refId": "A"
         },
         {
-          "expr": "increase(blocket_scraper_retries_total[5m])",
-          "legendFormat": "retries",
+          "expr": "sum by (run_type) (increase(blocket_scraper_retries_total[5m]))",
+          "legendFormat": "{{run_type}} retries",
           "refId": "B"
         }
       ],
@@ -404,23 +412,23 @@
       },
       "targets": [
         {
-          "expr": "max(blocket_scraper_last_listings_discovered)",
-          "legendFormat": "discovered",
+          "expr": "max by (run_type) (blocket_scraper_last_listings_discovered)",
+          "legendFormat": "{{run_type}} discovered",
           "refId": "A"
         },
         {
-          "expr": "max(blocket_scraper_last_listings_created)",
-          "legendFormat": "created",
+          "expr": "max by (run_type) (blocket_scraper_last_listings_created)",
+          "legendFormat": "{{run_type}} created",
           "refId": "B"
         },
         {
-          "expr": "max(blocket_scraper_last_listings_changed)",
-          "legendFormat": "changed",
+          "expr": "max by (run_type) (blocket_scraper_last_listings_changed)",
+          "legendFormat": "{{run_type}} changed",
           "refId": "C"
         },
         {
-          "expr": "max(blocket_scraper_last_listings_unchanged)",
-          "legendFormat": "unchanged",
+          "expr": "max by (run_type) (blocket_scraper_last_listings_unchanged)",
+          "legendFormat": "{{run_type}} unchanged",
           "refId": "D"
         }
       ],
@@ -461,18 +469,18 @@
       },
       "targets": [
         {
-          "expr": "max(blocket_scraper_last_detail_failures)",
-          "legendFormat": "detail failures",
+          "expr": "max by (run_type) (blocket_scraper_last_detail_failures)",
+          "legendFormat": "{{run_type}} failures",
           "refId": "A"
         },
         {
-          "expr": "max(blocket_scraper_last_detail_fallbacks)",
-          "legendFormat": "detail fallbacks",
+          "expr": "max by (run_type) (blocket_scraper_last_detail_fallbacks)",
+          "legendFormat": "{{run_type}} fallbacks",
           "refId": "B"
         },
         {
-          "expr": "max(blocket_scraper_last_detail_rejected)",
-          "legendFormat": "detail rejected",
+          "expr": "max by (run_type) (blocket_scraper_last_detail_rejected)",
+          "legendFormat": "{{run_type}} rejected",
           "refId": "C"
         }
       ],
@@ -513,23 +521,23 @@
       },
       "targets": [
         {
-          "expr": "increase(blocket_scraper_images_seen_total[30m])",
-          "legendFormat": "seen",
+          "expr": "sum by (run_type) (increase(blocket_scraper_images_seen_total[30m]))",
+          "legendFormat": "{{run_type}} seen",
           "refId": "A"
         },
         {
-          "expr": "increase(blocket_scraper_images_downloaded_total[30m])",
-          "legendFormat": "downloaded",
+          "expr": "sum by (run_type) (increase(blocket_scraper_images_downloaded_total[30m]))",
+          "legendFormat": "{{run_type}} downloaded",
           "refId": "B"
         },
         {
-          "expr": "increase(blocket_scraper_images_reused_total[30m])",
-          "legendFormat": "reused",
+          "expr": "sum by (run_type) (increase(blocket_scraper_images_reused_total[30m]))",
+          "legendFormat": "{{run_type}} reused",
           "refId": "C"
         },
         {
-          "expr": "increase(blocket_scraper_images_failed_total[30m])",
-          "legendFormat": "failed",
+          "expr": "sum by (run_type) (increase(blocket_scraper_images_failed_total[30m]))",
+          "legendFormat": "{{run_type}} failed",
           "refId": "D"
         }
       ],
@@ -570,23 +578,23 @@
       },
       "targets": [
         {
-          "expr": "increase(blocket_scraper_neo4j_ingest_processed_total[30m])",
-          "legendFormat": "processed",
+          "expr": "sum by (run_type) (increase(blocket_scraper_neo4j_ingest_processed_total[30m]))",
+          "legendFormat": "{{run_type}} processed",
           "refId": "A"
         },
         {
-          "expr": "increase(blocket_scraper_neo4j_ingest_upserted_total[30m])",
-          "legendFormat": "upserted",
+          "expr": "sum by (run_type) (increase(blocket_scraper_neo4j_ingest_upserted_total[30m]))",
+          "legendFormat": "{{run_type}} upserted",
           "refId": "B"
         },
         {
-          "expr": "increase(blocket_scraper_neo4j_ingest_created_total[30m])",
-          "legendFormat": "created",
+          "expr": "sum by (run_type) (increase(blocket_scraper_neo4j_ingest_created_total[30m]))",
+          "legendFormat": "{{run_type}} created",
           "refId": "C"
         },
         {
-          "expr": "increase(blocket_scraper_neo4j_ingest_changed_total[30m])",
-          "legendFormat": "changed",
+          "expr": "sum by (run_type) (increase(blocket_scraper_neo4j_ingest_changed_total[30m]))",
+          "legendFormat": "{{run_type}} changed",
           "refId": "D"
         }
       ],
