@@ -8,6 +8,7 @@ It mirrors the Booli stack shape:
 - Blocket API
 - Blocket web UI
 - scheduled scraper
+- manual full scraper
 - Pushgateway for scraper metrics
 
 Normal startup:
@@ -15,6 +16,14 @@ Normal startup:
 ```bash
 cd docker
 make blocket.up
+```
+
+Run a one-off full scrape:
+
+```bash
+cd docker/blocket
+docker compose --profile manual up -d blocket-full-scraper
+docker compose --profile manual logs -f blocket-full-scraper
 ```
 
 Neo4j Browser:

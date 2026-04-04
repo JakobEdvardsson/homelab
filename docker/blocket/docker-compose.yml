@@ -192,6 +192,50 @@ services:
     networks:
       - default
 
+  blocket-full-scraper:
+    container_name: blocket-full-scraper
+    image: ghcr.io/jakobedvardsson/blocket-scraper-scraper:${BLOCKET_IMAGE_TAG:-latest}
+    profiles: ["manual"]
+    restart: "no"
+    env_file:
+      - .env
+    environment:
+      NEO4J_URI: ${BLOCKET_NEO4J_URI:-bolt://blocket-neo4j:7687}
+      NEO4J_USERNAME: ${BLOCKET_NEO4J_USERNAME}
+      NEO4J_PASSWORD: ${BLOCKET_NEO4J_PASSWORD}
+      NEO4J_DATABASE: ${BLOCKET_NEO4J_DATABASE:-neo4j}
+      NEO4J_SCHEMA_ENSURE_ENABLED: "false"
+      SCRAPE_SEARCH_URL: ${BLOCKET_SCRAPE_SEARCH_URL}
+      SCRAPER_IMAGE_DOWNLOAD_ENABLED: ${BLOCKET_IMAGE_DOWNLOAD_ENABLED:-true}
+      SCRAPER_IMAGE_DOWNLOAD_TIMEOUT_SECONDS: ${BLOCKET_IMAGE_DOWNLOAD_TIMEOUT_SECONDS:-20}
+      SCRAPER_IMAGE_DOWNLOAD_RETRIES: ${BLOCKET_IMAGE_DOWNLOAD_RETRIES:-2}
+      SCRAPER_IMAGE_DOWNLOAD_VERBOSE: ${BLOCKET_IMAGE_DOWNLOAD_VERBOSE:-true}
+      SCRAPER_FETCH_BACKEND: ${BLOCKET_SCRAPER_FETCH_BACKEND:-flaresolverr}
+      SCRAPER_FLARESOLVERR_URL: ${BLOCKET_SCRAPER_FLARESOLVERR_URL:-http://blocket-flaresolverr:8191}
+      SCRAPER_FLARESOLVERR_SESSION_ID: ${BLOCKET_FULL_SCRAPER_FLARESOLVERR_SESSION_ID:-blocket-full-scraper}
+      SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS: ${BLOCKET_SCRAPER_FLARESOLVERR_MAX_TIMEOUT_MS:-120000}
+      SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES: ${BLOCKET_SCRAPER_FLARESOLVERR_SESSION_TTL_MINUTES:-30}
+      PROMETHEUS_PUSHGATEWAY_URL: http://blocket-pushgateway:9091
+    depends_on:
+      blocket-flaresolverr:
+        condition: service_started
+      blocket-neo4j:
+        condition: service_healthy
+      blocket-api:
+        condition: service_healthy
+      blocket-pushgateway:
+        condition: service_healthy
+    command: ["/app/full-scrape"]
+    volumes:
+      - ${APPDATA_ROOT}/blocket/data:/app/data
+    labels:
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "blocket"
+    networks:
+      - default
+
 networks:
   caddy_internal:
     external: true
