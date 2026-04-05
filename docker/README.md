@@ -18,6 +18,7 @@ Each stack directory is Compose Manager-friendly:
 - `immich`: Immich app, ML, Redis, and Postgres
 - `monitoring`: Prometheus, Grafana, Healthchecks, and exporters
 - `dockge`: optional compose UI managing the same stack directories
+- `syncthing`: continuous file sync with a proxied web UI
 
 ## Initial setup
 
@@ -50,6 +51,7 @@ make booli.up
 make blocket.up
 make gluetun.up
 make qbittorrent.up
+make syncthing.up
 make immich.up
 make monitoring.up
 ```

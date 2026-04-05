@@ -68,6 +68,11 @@ on:
         required: false
         type: boolean
         default: false
+      syncthing:
+        description: "Deploy syncthing"
+        required: false
+        type: boolean
+        default: false
       wud:
         description: "Deploy wud"
         required: false
@@ -125,6 +130,7 @@ jobs:
           [[ "${{ github.event.inputs.monitoring }}" == "true" ]] && selected_stacks+=("monitoring")
           [[ "${{ github.event.inputs.mousehole }}" == "true" ]] && selected_stacks+=("mousehole")
           [[ "${{ github.event.inputs.qbittorrent }}" == "true" ]] && selected_stacks+=("qbittorrent")
+          [[ "${{ github.event.inputs.syncthing }}" == "true" ]] && selected_stacks+=("syncthing")
           [[ "${{ github.event.inputs.wud }}" == "true" ]] && selected_stacks+=("wud")
 
           if [[ ${#selected_stacks[@]} -eq 0 ]]; then

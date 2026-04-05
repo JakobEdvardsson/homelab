@@ -36,6 +36,11 @@
         href: https://czkawka.edvardsson.dev
         siteMonitor: https://czkawka.edvardsson.dev
         description: Duplicate file finder
+    - Syncthing:
+        icon: syncthing
+        href: https://syncthing.edvardsson.dev
+        siteMonitor: https://syncthing.edvardsson.dev
+        description: Continuous file synchronization
     - Booli:
         icon: mdi-home-search
         href: https://booli.edvardsson.dev

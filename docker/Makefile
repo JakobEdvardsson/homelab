@@ -26,7 +26,7 @@ dockercompose = docker compose -f docker-compose.yml
 %.env:
 	cd ./$* && ln -sf ../.env .env
 
-PROJECTS = caddy homepage gluetun qbittorrent mousehole immich monitoring dockge authentik czkawka wud booli blocket
+PROJECTS = caddy homepage gluetun qbittorrent mousehole immich monitoring dockge authentik czkawka syncthing wud booli blocket
 
 .PHONY: list-projects
 list-projects:

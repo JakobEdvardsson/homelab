@@ -146,6 +146,12 @@
 		reverse_proxy http://it-tools:80
 	}
 
+	@syncthing host syncthing.{$BASE_DOMAIN}
+	handle @syncthing {
+		import authentik
+		reverse_proxy http://syncthing:8384
+	}
+
 	handle {
 		respond "Not found" 404
 	}

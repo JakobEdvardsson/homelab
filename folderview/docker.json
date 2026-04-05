@@ -375,5 +375,34 @@
     "regex": "",
     "containers": [],
     "actions": []
+  },
+  "syncthing-folder": {
+    "name": "syncthing",
+    "icon": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/syncthing.png",
+    "settings": {
+      "preview": 1,
+      "preview_hover": false,
+      "preview_update": true,
+      "preview_text_width": "",
+      "preview_grayscale": false,
+      "preview_webui": true,
+      "preview_logs": true,
+      "preview_console": false,
+      "preview_vertical_bars": false,
+      "context": 1,
+      "context_trigger": 0,
+      "context_graph": 1,
+      "context_graph_time": 60,
+      "preview_border": false,
+      "preview_border_color": "#0891b2",
+      "update_column": true,
+      "default_action": false,
+      "expand_tab": false,
+      "override_default_actions": false,
+      "expand_dashboard": false
+    },
+    "regex": "",
+    "containers": [],
+    "actions": []
   }
 }
