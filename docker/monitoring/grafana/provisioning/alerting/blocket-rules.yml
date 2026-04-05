@@ -6,21 +6,21 @@ groups:
     folder: Homelab
     interval: 1m
     rules:
-      - uid: blocket_scraper_failed
-        title: Blocket scraper failed recently
+      - uid: blocket_scraper_no_new_listings_24h
+        title: Blocket has no new listings in 24h
         condition: C
         data:
           - refId: A
             datasourceUid: prometheus
             relativeTimeRange:
-              from: 7200
+              from: 86400
               to: 0
             model:
               datasource:
                 type: prometheus
                 uid: prometheus
               editorMode: code
-              expr: (time() - max(blocket_scraper_last_failure_unixtime_seconds) < 7200) and (max(blocket_scraper_last_failure_unixtime_seconds) > max(blocket_scraper_last_success_unixtime_seconds))
+              expr: sum(increase(blocket_scraper_neo4j_ingest_created_total[24h]))
               instant: true
               intervalMs: 1000
               legendFormat: __auto
@@ -52,7 +52,7 @@ groups:
                 - evaluator:
                     params:
                       - 0
-                    type: gt
+                    type: lte
                   operator:
                     type: and
                   query:
@@ -71,302 +71,10 @@ groups:
               type: threshold
         noDataState: OK
         execErrState: Error
-        for: 5m
+        for: 10m
         annotations:
-          summary: Blocket scraper failed recently
-          description: The most recent Blocket scraper run failed within the last two hours.
+          summary: Blocket has no new listings in 24h
+          description: No new Blocket listings were created in Neo4j during the last 24 hours.
         labels:
           service: blocket
           severity: critical
-
-      - uid: blocket_scraper_stale
-        title: Blocket scraper stale
-        condition: C
-        data:
-          - refId: A
-            datasourceUid: prometheus
-            relativeTimeRange:
-              from: 10800
-              to: 0
-            model:
-              datasource:
-                type: prometheus
-                uid: prometheus
-              editorMode: code
-              expr: time() - max(blocket_scraper_last_activity_unixtime_seconds)
-              instant: true
-              intervalMs: 1000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: B
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 7200
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: B
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        noDataState: OK
-        execErrState: Error
-        for: 10m
-        annotations:
-          summary: Blocket scraper is stale
-          description: No scraper activity has been observed for more than two hours.
-        labels:
-          service: blocket
-          severity: critical
-
-      - uid: blocket_scraper_no_success
-        title: Blocket scraper has not completed successfully recently
-        condition: C
-        data:
-          - refId: A
-            datasourceUid: prometheus
-            relativeTimeRange:
-              from: 7200
-              to: 0
-            model:
-              datasource:
-                type: prometheus
-                uid: prometheus
-              editorMode: code
-              expr: time() - max(blocket_scraper_last_success_unixtime_seconds)
-              instant: true
-              intervalMs: 1000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: B
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 7200
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: B
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        noDataState: OK
-        execErrState: Error
-        for: 10m
-        annotations:
-          summary: Blocket scraper has not completed successfully recently
-          description: No successful Blocket scraper run has completed in the last two hours.
-        labels:
-          service: blocket
-          severity: critical
-
-      - uid: blocket_image_failures
-        title: Blocket image downloads failing
-        condition: C
-        data:
-          - refId: A
-            datasourceUid: prometheus
-            relativeTimeRange:
-              from: 1800
-              to: 0
-            model:
-              datasource:
-                type: prometheus
-                uid: prometheus
-              editorMode: code
-              expr: (sum(increase(blocket_scraper_images_failed_total[30m])) >= 5) and ((sum(increase(blocket_scraper_images_failed_total[30m])) / clamp_min(sum(increase(blocket_scraper_images_downloaded_total[30m])) + sum(increase(blocket_scraper_images_reused_total[30m])) + sum(increase(blocket_scraper_images_failed_total[30m])), 1)) > 0.2)
-              instant: true
-              intervalMs: 1000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: B
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: B
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        noDataState: OK
-        execErrState: Error
-        for: 10m
-        annotations:
-          summary: Blocket image downloads failing
-          description: Image download failures are elevated in the last 30 minutes.
-        labels:
-          service: blocket
-          severity: warning
-
-      - uid: blocket_detail_rejected
-        title: Blocket detail pages being rejected
-        condition: C
-        data:
-          - refId: A
-            datasourceUid: prometheus
-            relativeTimeRange:
-              from: 1800
-              to: 0
-            model:
-              datasource:
-                type: prometheus
-                uid: prometheus
-              editorMode: code
-              expr: increase(blocket_scraper_detail_rejected_total[30m])
-              instant: true
-              intervalMs: 1000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: B
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: B
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            relativeTimeRange:
-              from: 0
-              to: 0
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 5
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - C
-                  reducer:
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: B
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        noDataState: OK
-        execErrState: Error
-        for: 10m
-        annotations:
-          summary: Blocket detail pages are being rejected
-          description: More than five detail pages were rejected as low quality/interstitial in the last 30 minutes.
-        labels:
-          service: blocket
-          severity: warning
