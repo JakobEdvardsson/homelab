@@ -11,6 +11,7 @@ Each stack directory is Compose Manager-friendly:
 
 - `caddy`: reverse proxy and wildcard TLS
 - `homepage`: dashboard with service and external links
+- `backrest`: restic backup UI and scheduler
 - `booli`: Booli scraper, API, web UI, and worker services
 - `blocket`: Blocket scraper, API, web UI, and worker services
 - `gluetun`: VPN sidecar network namespace
@@ -42,6 +43,7 @@ make env
 ```bash
 make caddy.up
 make homepage.up
+make backrest.up
 ```
 
 6. Start the application stacks:
@@ -78,7 +80,7 @@ The example env file is already written for standard Unraid-style `/mnt/user/...
 - qBittorrent uses the `gluetun` container network namespace via `network_mode: container:gluetun`.
 - Gluetun needs the qBittorrent WebUI and torrenting ports in `FIREWALL_INPUT_PORTS`.
 - The Caddy stack assumes you want wildcard certs through Cloudflare DNS.
-- The homepage stack includes external links for Unraid, UniFi, and the two Backrest endpoints from the old setup.
+- The homepage stack includes external links for Unraid, UniFi, and the Ugreen Backrest endpoint from the old setup.
 - Healthchecks still needs an explicit superuser bootstrap step:
 
 ```bash

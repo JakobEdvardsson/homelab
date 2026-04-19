@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         default: false
+      backrest:
+        description: "Deploy backrest"
+        required: false
+        type: boolean
+        default: false
       blocket:
         description: "Deploy blocket"
         required: false
@@ -118,6 +123,7 @@ jobs:
         run: |
           selected_stacks=()
           [[ "${{ github.event.inputs.authentik }}" == "true" ]] && selected_stacks+=("authentik")
+          [[ "${{ github.event.inputs.backrest }}" == "true" ]] && selected_stacks+=("backrest")
           [[ "${{ github.event.inputs.blocket }}" == "true" ]] && selected_stacks+=("blocket")
           [[ "${{ github.event.inputs.booli }}" == "true" ]] && selected_stacks+=("booli")
           [[ "${{ github.event.inputs.caddy }}" == "true" ]] && selected_stacks+=("caddy")

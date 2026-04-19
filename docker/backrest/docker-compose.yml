@@ -1,0 +1,35 @@
+name: backrest
+
+services:
+  backrest:
+    container_name: backrest
+    image: garethgeorge/backrest:latest
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      BACKREST_PORT: 0.0.0.0:9898
+      BACKREST_DATA: /data
+      BACKREST_CONFIG: /config/config.json
+      XDG_CACHE_HOME: /cache
+      TMPDIR: /tmp
+    volumes:
+      - ${APPDATA_ROOT}/backrest/data:/data
+      - ${APPDATA_ROOT}/backrest/config:/config
+      - ${APPDATA_ROOT}/backrest/cache:/cache
+      - ${APPDATA_ROOT}/backrest/tmp:/tmp
+      - ${APPDATA_ROOT}/backrest/rclone:/root/.config/rclone
+      - ${APPDATA_ROOT}/backrest/repos:/repos
+      - /mnt/user:/userdata:ro
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/backrest.png"
+      net.unraid.docker.webui: "https://backrest.edvardsson.dev"
+      net.unraid.docker.shell: "sh"
+      folder.view3: "backrest"
+    networks:
+      - default
+      - caddy_internal
+
+networks:
+  caddy_internal:
+    external: true

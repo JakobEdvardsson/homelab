@@ -53,6 +53,11 @@
         description: Blocket vehicle search UI
 
 - Monitoring & Ops:
+    - Backrest:
+        icon: backrest
+        href: https://backrest.edvardsson.dev
+        siteMonitor: https://backrest.edvardsson.dev
+        description: Restic backup orchestrator
     - Grafana:
         icon: grafana
         href: https://grafana.edvardsson.dev
@@ -105,8 +110,3 @@
         href: https://ugreen-backrest.edvardsson.dev
         siteMonitor: https://ugreen-backrest.edvardsson.dev
         description: Ugreen Backrest
-    - Tower - Backrest:
-        icon: backrest
-        href: http://tower:9898
-        siteMonitor: http://tower:9898
-        description: Tower Backrest
