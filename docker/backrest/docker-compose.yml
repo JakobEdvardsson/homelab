@@ -12,6 +12,11 @@ services:
       BACKREST_CONFIG: /config/config.json
       XDG_CACHE_HOME: /cache
       TMPDIR: /tmp
+    dns:
+      - 100.100.100.100
+      - ${DOCKER_DNS_1}
+      - ${DOCKER_DNS_2}
+      - ${DOCKER_DNS_3}
     volumes:
       - ${APPDATA_ROOT}/backrest/data:/data
       - ${APPDATA_ROOT}/backrest/config:/config
