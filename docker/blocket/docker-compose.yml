@@ -5,6 +5,7 @@ services:
     container_name: blocket-flaresolverr
     image: ghcr.io/flaresolverr/flaresolverr:latest
     restart: unless-stopped
+    cpus: 1.0
     environment:
       LOG_LEVEL: info
       LOG_HTML: "false"
