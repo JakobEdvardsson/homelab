@@ -24,7 +24,7 @@ The main NixOS to Unraid substitutions are:
 - `wireguard-netns` + `tailscale-exit-vpn` is replaced with a Docker VPN sidecar pattern for Deluge
 - homepage external links now point at Unraid and the other appliances directly
 
-Start with [`docker/README.md`](/home/jakobe/code/homelab/docker/README.md) and copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
+Start with [`docker/README.md`](/home/jakobe/code/homelab/docker/README.md). Secrets live per stack under [`secrets/`](/home/jakobe/code/homelab/secrets) (sops/age); generate each stack's `.env` locally with `make <stack>.env` (or `make env` for all).
 
 ## GitHub Actions Deploy
 

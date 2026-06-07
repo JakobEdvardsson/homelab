@@ -15,18 +15,16 @@ When adding a new service to this repo:
    - `folder.view3`
    - If you add a new `folder.view3` label value, also add the matching folder definition to [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json).
    - Whenever [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json) changes, copy it to the live Unraid plugin path because `/boot` is FAT32 and cannot use symlinks:
-7. For every stack directory, commit a stack-local symlink from `.env` to the shared env file so the repo already contains:
+7. Do not commit a stack-local `.env` (it is git-ignored). At deploy time the CI decrypts `secrets/common.yaml` plus the stack's own `secrets/<stack>.yaml` into `docker/<stack>/.env`. For local development, generate it with:
 
 ```bash
-cd /home/jakobe/code/homelab/docker/<stack>
-ln -sf ../.env .env
+cd /home/jakobe/code/homelab/docker
+make <stack>.env
 ```
-
-Do not leave this as a manual post-step. The `.env` symlink should exist in git for every stack unless there is a strong reason not to share the root env file.
 
 8. If the stack should be managed through the helper targets, add it to [`docker/Makefile`](/home/jakobe/code/homelab/docker/Makefile).
 9. For every new stack directory, add a matching boolean `workflow_dispatch` input and selection line to [`deploy-selected-stacks.yml`](/home/jakobe/code/homelab/.github/workflows/deploy-selected-stacks.yml) so the manual deploy UI stays in sync with the available stacks.
 10. If a stack should start automatically, commit an `autostart` file with the contents `true`. Do not rely on an ignored local file for deploy behavior.
-11. Store secrets in [`secrets.yaml`](/home/jakobe/code/homelab/secrets.yaml) encrypted with `sops`. Do not commit plaintext secrets to compose files, stack-local `.env` files, or docs. If secret recipients or rules need to change, update [`.sops.yaml`](/home/jakobe/code/homelab/.sops.yaml) as part of the same change.
+11. Store secrets per stack in [`secrets/`](/home/jakobe/code/homelab/secrets), each file encrypted with `sops`: shared, non-sensitive config goes in `secrets/common.yaml` (injected into every stack), and stack-specific values go in `secrets/<stack>.yaml`. Do not commit plaintext secrets to compose files, stack-local `.env` files, or docs. If secret recipients or rules need to change, update [`.sops.yaml`](/home/jakobe/code/homelab/.sops.yaml) as part of the same change.
 
-Assume the shared env file is [`docker/.env`](/home/jakobe/code/homelab/docker/.env) unless there is a strong reason to isolate a stack's secrets.
+Each stack's `.env` is `secrets/common.yaml` + `secrets/<stack>.yaml`. Put a value in `common.yaml` only when multiple stacks need it; otherwise keep it scoped to the stack that uses it so secrets are not injected into unrelated containers.

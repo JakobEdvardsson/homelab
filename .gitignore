@@ -1,5 +1,9 @@
-# Ignore docker .env file but not symlinks
+# Per-stack env files written at deploy time from decrypted secrets
+/docker/*/.env
+# Legacy shared env file (now per-stack)
 /docker/.env
+# Staged per-stack env archive shipped by CI
+/.deploy-env.tgz
 # Ignore data folder
 /data
 /.codex

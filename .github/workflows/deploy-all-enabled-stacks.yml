@@ -46,20 +46,32 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
-          env_file="$(mktemp)"
-          trap 'rm -f "$env_file"' EXIT
           install -d -m 700 "$HOME/.config/sops/age"
           printf '%s\n' "$SOPS_AGE_KEY" > "$HOME/.config/sops/age/keys.txt"
           chmod 600 "$HOME/.config/sops/age/keys.txt"
-          sops -d --output-type dotenv secrets.yaml > "$env_file"
-          chmod 600 "$env_file"
+
+          # Build one dotenv per stack (common + the stack's own secrets) and
+          # ship them as a single tar. The deploy script extracts it on the host
+          # and installs docker/<stack>/.env per stack.
+          stage="$(mktemp -d)"
+          env_archive="$(mktemp)"
+          trap 'rm -rf "$stage" "$env_archive"' EXIT
+          sops -d --output-type dotenv secrets/common.yaml > "$stage/common.env"
+          for f in secrets/*.yaml; do
+            base="$(basename "$f" .yaml)"
+            [ "$base" = "common" ] && continue
+            cat "$stage/common.env" > "$stage/$base.env"
+            sops -d --output-type dotenv "$f" >> "$stage/$base.env"
+          done
+          chmod 600 "$stage"/*.env
+          tar -czf "$env_archive" -C "$stage" .
 
           scp \
             -i "$HOME/.ssh/id_ed25519" \
             -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
-            "$env_file" \
-            "$HOMELAB_USER@$HOMELAB_HOST:$REPO_DIR/docker/.env"
+            "$env_archive" \
+            "$HOMELAB_USER@$HOMELAB_HOST:$REPO_DIR/.deploy-env.tgz"
 
           echo "[deploy-all] connecting to $HOMELAB_USER@$HOMELAB_HOST"
           ssh -T \

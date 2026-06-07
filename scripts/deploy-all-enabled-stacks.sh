@@ -4,7 +4,8 @@ set -euo pipefail
 REPO_DIR="${REPO_DIR:-/mnt/user/appdata/homelab}"
 BRANCH="${BRANCH:-main}"
 STACKS_DIR="$REPO_DIR/docker"
-ENV_FILE="$STACKS_DIR/.env"
+ENV_ARCHIVE="${ENV_ARCHIVE:-$REPO_DIR/.deploy-env.tgz}"
+ENV_STAGE_DIR=""
 
 log() {
   printf '[deploy-all] %s\n' "$*"
@@ -46,13 +47,33 @@ stack_is_running() {
   (cd "$STACKS_DIR/$stack" && docker compose ps --status running -q 2>/dev/null | grep -q .)
 }
 
+# Per-stack envs are decrypted in CI and shipped as a tar of flat <stack>.env
+# files (each = common.env + the stack's own secrets). Extract once, then
+# install the right one into each stack dir. Stacks without their own secrets
+# fall back to common.env.
 ensure_stack_env() {
   local stack="$1"
-  if [[ ! -f "$ENV_FILE" ]]; then
-    log "missing shared env file: $ENV_FILE"
+  if [[ -z "$ENV_STAGE_DIR" ]]; then
+    if [[ ! -f "$ENV_ARCHIVE" ]]; then
+      log "missing env archive: $ENV_ARCHIVE"
+      exit 1
+    fi
+    ENV_STAGE_DIR="$(mktemp -d)"
+    tar -xzf "$ENV_ARCHIVE" -C "$ENV_STAGE_DIR"
+    # Remove the legacy shared env (plaintext copy of every secret) left by
+    # older deploys; secrets are now per-stack.
+    rm -f "$STACKS_DIR/.env"
+  fi
+  local src="$ENV_STAGE_DIR/$stack.env"
+  [[ -f "$src" ]] || src="$ENV_STAGE_DIR/common.env"
+  if [[ ! -f "$src" ]]; then
+    log "missing env for stack $stack (no $stack.env or common.env in archive)"
     exit 1
   fi
-  ln -sf ../.env "$STACKS_DIR/$stack/.env"
+  # Drop any pre-existing file/symlink first: older deploys symlinked .env to
+  # ../.env, and install would otherwise write through that symlink.
+  rm -f "$STACKS_DIR/$stack/.env"
+  install -m 600 "$src" "$STACKS_DIR/$stack/.env"
 }
 
 stack_needs_force_recreate() {

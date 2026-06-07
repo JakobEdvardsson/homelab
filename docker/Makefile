@@ -24,7 +24,10 @@ dockercompose = docker compose -f docker-compose.yml
 %.restart:
 	cd $(PREFIX)/$* && $(dockercompose) restart
 %.env:
-	cd ./$* && ln -sf ../.env .env
+	sops -d --output-type dotenv ../secrets/common.yaml > $(PREFIX)/$*/.env
+	@if [ -f ../secrets/$*.yaml ]; then \
+		sops -d --output-type dotenv ../secrets/$*.yaml >> $(PREFIX)/$*/.env; \
+	fi
 
 PROJECTS = caddy homepage gluetun qbittorrent mousehole immich monitoring dockge authentik backrest czkawka syncthing wud booli blocket
 
@@ -54,7 +57,7 @@ help:
 	@echo "  pull          Run 'docker compose pull' for all projects"
 	@echo "  up            Run 'docker compose up -d' for all projects"
 	@echo "  down          Run 'docker compose down' for all projects"
-	@echo "  env           Symlink shared .env file into all project dirs"
+	@echo "  env           Decrypt per-stack .env (common + stack) into all project dirs"
 	@echo ""
 	@echo "Per-project commands:"
 	@echo "  <project>.pull       Pull images"
@@ -67,6 +70,6 @@ help:
 	@echo "  <project>.stop       Stop services"
 	@echo "  <project>.kill       Kill services"
 	@echo "  <project>.restart    Restart services"
-	@echo "  <project>.env        Create symlink to shared .env"
+	@echo "  <project>.env        Decrypt per-stack .env (common + stack) via sops"
 
 .DEFAULT_GOAL := help

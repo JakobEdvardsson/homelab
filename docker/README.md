@@ -23,22 +23,21 @@ Each stack directory is Compose Manager-friendly:
 
 ## Initial setup
 
-1. Copy [`docker/.env.example`](/home/jakobe/code/homelab/docker/.env.example) to `docker/.env`.
-2. Adjust the Unraid paths, domain, Cloudflare token, and VPN settings.
-3. Create the shared Docker network:
+1. Edit the secrets under [`secrets/`](/home/jakobe/code/homelab/secrets) with `sops` (Unraid paths, domain, Cloudflare token, VPN settings, etc.). Shared values live in `secrets/common.yaml`; stack-specific values in `secrets/<stack>.yaml`.
+2. Create the shared Docker network:
 
 ```bash
 docker network create caddy_internal
 ```
 
-4. Create symlinks for `.env` files:
+3. Generate each stack's `.env` (`secrets/common.yaml` + `secrets/<stack>.yaml`):
 
 ```bash
 cd docker
 make env
 ```
 
-5. Start the base services first:
+4. Start the base services first:
 
 ```bash
 make caddy.up
@@ -46,7 +45,7 @@ make homepage.up
 make backrest.up
 ```
 
-6. Start the application stacks:
+5. Start the application stacks:
 
 ```bash
 make booli.up
@@ -58,7 +57,7 @@ make immich.up
 make monitoring.up
 ```
 
-7. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
+6. Optional: start Dockge if you want a compose-focused UI in addition to Unraid:
 
 ```bash
 make dockge.up
@@ -69,11 +68,10 @@ make dockge.up
 By default the stacks assume:
 
 - app configs live under `${APPDATA_ROOT}`
-- bulk media lives under `${MEDIA_ROOT}`
 - downloads live under `${DOWNLOADS_ROOT}`
-- Immich originals live under `${IMMICH_LIBRARY_ROOT}`
+- Immich originals live under `${UPLOAD_LOCATION}`
 
-The example env file is already written for standard Unraid-style `/mnt/user/...` paths.
+The secrets are already written for standard Unraid-style `/mnt/user/...` paths.
 
 ## Notes
 

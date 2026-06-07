@@ -6,7 +6,8 @@ BRANCH="${BRANCH:-main}"
 BEFORE_SHA="${BEFORE_SHA:-}"
 AFTER_SHA="${AFTER_SHA:-}"
 STACKS_DIR="$REPO_DIR/docker"
-ENV_FILE="$STACKS_DIR/.env"
+ENV_ARCHIVE="${ENV_ARCHIVE:-$REPO_DIR/.deploy-env.tgz}"
+ENV_STAGE_DIR=""
 
 log() {
   printf '[deploy] %s\n' "$*"
@@ -66,7 +67,9 @@ for path in "${changed_files[@]}"; do
   if [[ "$path" == "folderview/docker.json" ]]; then
     folderview_changed=true
   fi
-  if [[ "$path" == "secrets.yaml" || "$path" == ".sops.yaml" ]]; then
+  # A change to common secrets or the sops config affects every stack.
+  # Per-stack secret files (secrets/<stack>.yaml) are handled in the loop below.
+  if [[ "$path" == ".sops.yaml" || "$path" == "secrets/common.yaml" ]]; then
     shared_env_changed=true
   fi
 done
@@ -84,11 +87,14 @@ if [[ "$shared_env_changed" == "true" ]]; then
   )
 else
   for path in "${changed_files[@]}"; do
+    stack=""
     if [[ "$path" =~ ^docker/([^/]+)/ ]]; then
       stack="${BASH_REMATCH[1]}"
-      if [[ -f "$REPO_DIR/docker/$stack/docker-compose.yml" ]]; then
-        stack_set["$stack"]=1
-      fi
+    elif [[ "$path" =~ ^secrets/([^/]+)\.yaml$ ]]; then
+      stack="${BASH_REMATCH[1]}"
+    fi
+    if [[ -n "$stack" && -f "$REPO_DIR/docker/$stack/docker-compose.yml" ]]; then
+      stack_set["$stack"]=1
     fi
   done
 fi
@@ -133,14 +139,33 @@ stack_is_running() {
   (cd "$STACKS_DIR/$stack" && docker compose ps --status running -q 2>/dev/null | grep -q .)
 }
 
+# Per-stack envs are decrypted in CI and shipped as a tar of flat <stack>.env
+# files (each = common.env + the stack's own secrets). Extract once, then
+# install the right one into each stack dir. Stacks without their own secrets
+# fall back to common.env.
 ensure_stack_env() {
   local stack="$1"
-  local stack_dir="$STACKS_DIR/$stack"
-  if [[ ! -f "$ENV_FILE" ]]; then
-    log "missing shared env file: $ENV_FILE"
+  if [[ -z "$ENV_STAGE_DIR" ]]; then
+    if [[ ! -f "$ENV_ARCHIVE" ]]; then
+      log "missing env archive: $ENV_ARCHIVE"
+      exit 1
+    fi
+    ENV_STAGE_DIR="$(mktemp -d)"
+    tar -xzf "$ENV_ARCHIVE" -C "$ENV_STAGE_DIR"
+    # Remove the legacy shared env (plaintext copy of every secret) left by
+    # older deploys; secrets are now per-stack.
+    rm -f "$STACKS_DIR/.env"
+  fi
+  local src="$ENV_STAGE_DIR/$stack.env"
+  [[ -f "$src" ]] || src="$ENV_STAGE_DIR/common.env"
+  if [[ ! -f "$src" ]]; then
+    log "missing env for stack $stack (no $stack.env or common.env in archive)"
     exit 1
   fi
-  ln -sf ../.env "$stack_dir/.env"
+  # Drop any pre-existing file/symlink first: older deploys symlinked .env to
+  # ../.env, and install would otherwise write through that symlink.
+  rm -f "$STACKS_DIR/$stack/.env"
+  install -m 600 "$src" "$STACKS_DIR/$stack/.env"
 }
 
 stack_needs_force_recreate() {
