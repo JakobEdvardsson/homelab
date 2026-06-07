@@ -14,6 +14,7 @@ services:
       MOUSEHOLE_STATE_DIR_PATH: /srv/mousehole
       MOUSEHOLE_INSECURE_ALLOW_NO_AUTH: "true"
       MOUSEHOLE_ALLOWED_HOSTS: "mousehole.${BASE_DOMAIN}"
+      MOUSEHOLE_ALLOWED_ORIGINS: "https://mousehole.${BASE_DOMAIN}"
       MOUSEHOLE_HTTPS_ONLY_COOKIES: "true"
     volumes:
       - ${APPDATA_ROOT}/mousehole:/srv/mousehole
