@@ -17,6 +17,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/qbittorrent:/config
       - ${DOWNLOADS_ROOT}:/downloads
+      - ./bypass-webui-auth.sh:/config/custom-cont-init.d/bypass-webui-auth.sh:ro
     labels:
       net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/qbittorrent.png"
