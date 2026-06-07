@@ -12,6 +12,7 @@ services:
       TZ: ${TZ}
       MOUSEHOLE_PORT: ${MOUSEHOLE_PORT}
       MOUSEHOLE_STATE_DIR_PATH: /srv/mousehole
+      MOUSEHOLE_DISABLE_AUTH_NO_NETWORK_BOUNDARY: "true"
     volumes:
       - ${APPDATA_ROOT}/mousehole:/srv/mousehole
     labels:
