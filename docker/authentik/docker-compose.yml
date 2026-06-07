@@ -15,6 +15,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -41,6 +42,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/authentik/postgresql:/var/lib/postgresql/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/postgres.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -68,6 +70,7 @@ services:
       - ${APPDATA_ROOT}/authentik/data:/data
       - ${APPDATA_ROOT}/authentik/custom-templates:/templates
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png"
       net.unraid.docker.webui: "https://authentik.edvardsson.dev"
       net.unraid.docker.shell: "sh"
@@ -98,6 +101,7 @@ services:
       - ${APPDATA_ROOT}/authentik/certs:/certs
       - ${APPDATA_ROOT}/authentik/custom-templates:/templates
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/authentik.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"

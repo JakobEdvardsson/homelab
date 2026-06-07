@@ -11,6 +11,7 @@ services:
       LOG_HTML: "false"
       CAPTCHA_SOLVER: none
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -47,6 +48,7 @@ services:
       - ${APPDATA_ROOT}/booli/neo4j/import:/var/lib/neo4j/import
       - ${APPDATA_ROOT}/booli/neo4j/plugins:/plugins
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/neo4j.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -81,6 +83,7 @@ services:
       retries: 5
       start_period: 20s
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/neo4j.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -109,6 +112,7 @@ services:
       retries: 5
       start_period: 20s
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/home-assistant.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -133,6 +137,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/booli/pushgateway:/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -186,6 +191,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/booli/data:/app/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -232,6 +238,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/booli/data:/app/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -274,6 +281,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/booli/data:/app/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"

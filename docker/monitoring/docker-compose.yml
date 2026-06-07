@@ -15,6 +15,7 @@ services:
       - ./prometheus:/etc/prometheus:ro
       - ${APPDATA_ROOT}/prometheus:/prometheus
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: "https://prometheus.edvardsson.dev"
       net.unraid.docker.shell: "sh"
@@ -41,6 +42,7 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png"
       net.unraid.docker.webui: "https://grafana.edvardsson.dev"
       net.unraid.docker.shell: "sh"
@@ -67,6 +69,7 @@ services:
     volumes:
       - ${APPDATA_ROOT}/healthchecks:/data
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/healthchecks.png"
       net.unraid.docker.webui: "https://healthchecks.edvardsson.dev"
       net.unraid.docker.shell: "sh"
@@ -90,6 +93,7 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -112,6 +116,7 @@ services:
       - /var/lib/docker:/var/lib/docker:ro
       - /dev/disk:/dev/disk:ro
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
@@ -132,6 +137,7 @@ services:
       EXPORTER_PORT: 9183
       EXPORTER_LOG_LEVEL: WARNING
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prometheus.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"

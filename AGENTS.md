@@ -7,10 +7,10 @@ When adding a new service to this repo:
 3. For every new user-facing service, add the Homepage entry to [`docker/homepage/config/services.yaml`](/home/jakobe/code/homelab/docker/homepage/config/services.yaml).
 4. For every service that is reverse proxied by Caddy, make sure the target container is reachable on the `caddy_internal` Docker network.
 5. For every new stack directory, create a `name` file so Unraid Compose Manager / Dockge can identify the stack.
-6. For every container, add the Unraid metadata labels in compose when they make sense:
-   - `net.unraid.docker.managed`
+6. For every container, add the Unraid metadata labels in compose:
+   - `net.unraid.docker.managed: "composeman"` — **required on every container.** It marks the container as compose-managed so Unraid's Docker page skips its template-based update check. Without it, any container using `network_mode: container:*` (e.g. the gluetun VPN sidecar) is routed through Unraid's legacy update path, which fatals on the missing template (`file_get_contents('')` under PHP 8) and leaves the entire Docker page stuck spinning. We manage updates via WUD, not Unraid, so this label is always correct.
    - `net.unraid.docker.icon`
-   - `net.unraid.docker.webui`
+   - `net.unraid.docker.webui` (when the service has a web UI; empty string otherwise)
    - `net.unraid.docker.shell`
    - `folder.view3`
    - If you add a new `folder.view3` label value, also add the matching folder definition to [`folderview/docker.json`](/home/jakobe/code/homelab/folderview/docker.json).

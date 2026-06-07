@@ -25,6 +25,7 @@ services:
       - ${DOCKER_DNS_2}
       - ${DOCKER_DNS_3}
     labels:
+      net.unraid.docker.managed: "composeman"
       net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/caddy.png"
       net.unraid.docker.webui: ""
       net.unraid.docker.shell: "sh"
