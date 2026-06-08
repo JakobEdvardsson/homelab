@@ -1,23 +1,27 @@
-#!/bin/bash
-# Whitelist internal Docker subnets so Caddy's reverse proxy requests
-# are never subject to qBittorrent's own auth / IP ban logic.
-# Auth is handled upstream by authentik.
-
+#!/bin/sh
 CONFIG="/config/qBittorrent/qBittorrent.conf"
+[ -f "$CONFIG" ] || exit 0
 
-if [ ! -f "$CONFIG" ]; then
-    exit 0
+# qBittorrent requires actual tab characters between subnet and enabled-flag
+TAB=$(printf '\t')
+WHITELIST="10.0.0.0/8${TAB}1, 172.16.0.0/12${TAB}1, 192.168.0.0/16${TAB}1"
+
+# Replace existing entries
+awk -v wl="$WHITELIST" '
+    /^WebUI\\AuthSubnetWhitelistEnabled=/ { print "WebUI\\AuthSubnetWhitelistEnabled=true"; next }
+    /^WebUI\\AuthSubnetWhitelist=/        { print "WebUI\\AuthSubnetWhitelist=" wl; next }
+    { print }
+' "$CONFIG" > "${CONFIG}.tmp"
+
+# Insert after [Preferences] if not already present (fixed-string grep, no regex)
+if ! grep -qF 'WebUI\AuthSubnetWhitelistEnabled=' "${CONFIG}.tmp"; then
+    awk '/^\[Preferences\]/ { print; print "WebUI\\AuthSubnetWhitelistEnabled=true"; next } 1' \
+        "${CONFIG}.tmp" > "${CONFIG}.tmp2" && mv "${CONFIG}.tmp2" "${CONFIG}.tmp"
+fi
+if ! grep -qF 'WebUI\AuthSubnetWhitelist=' "${CONFIG}.tmp"; then
+    awk -v wl="$WHITELIST" \
+        '/^\[Preferences\]/ { print; print "WebUI\\AuthSubnetWhitelist=" wl; next } 1' \
+        "${CONFIG}.tmp" > "${CONFIG}.tmp2" && mv "${CONFIG}.tmp2" "${CONFIG}.tmp"
 fi
 
-set_or_replace() {
-    local key="$1"
-    local value="$2"
-    if grep -q "^${key}=" "$CONFIG"; then
-        sed -i "s|^${key}=.*|${key}=${value}|" "$CONFIG"
-    else
-        sed -i "/^\[Preferences\]/a ${key}=${value}" "$CONFIG"
-    fi
-}
-
-set_or_replace 'WebUI\\AuthSubnetWhitelistEnabled' 'true'
-set_or_replace 'WebUI\\AuthSubnetWhitelist' '10.0.0.0/8\t1,172.16.0.0/12\t1,192.168.0.0/16\t1'
+mv "${CONFIG}.tmp" "$CONFIG"
