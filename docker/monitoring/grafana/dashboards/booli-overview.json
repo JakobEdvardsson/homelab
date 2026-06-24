@@ -74,7 +74,7 @@
           "refId": "A"
         }
       ],
-      "title": "Time Since Last Active Scrape Activity",
+      "title": "Seconds Since Last Active Scrape Activity",
       "type": "stat"
     },
     {
@@ -190,10 +190,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 8
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
       },
       "options": {
         "legend": {
@@ -235,7 +235,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 4
       },
       "options": {
         "legend": {
@@ -282,7 +282,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 4
       },
       "options": {
         "legend": {
@@ -334,7 +334,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 12
       },
       "options": {
         "legend": {
@@ -386,7 +386,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 12
       },
       "options": {
         "legend": {
@@ -428,7 +428,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 20
       },
       "options": {
         "legend": {
@@ -470,7 +470,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 20
       },
       "options": {
         "legend": {
@@ -486,7 +486,7 @@
       },
       "targets": [
         {
-          "expr": "(sum(rate(booli_api_http_requests_total{status=~\"5..\"}[5m])) or vector(0)) / clamp_min((sum(rate(booli_api_http_requests_total[5m])) or vector(0)), 1)",
+          "expr": "sum(rate(booli_api_http_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(booli_api_http_requests_total[5m])), 1)",
           "legendFormat": "5xx ratio",
           "refId": "A"
         }
@@ -512,7 +512,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 28
       },
       "options": {
         "legend": {
@@ -554,7 +554,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 28
       },
       "options": {
         "legend": {
@@ -629,7 +629,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 48
+        "y": 36
       },
       "targets": [
         {
@@ -637,7 +637,7 @@
           "refId": "A"
         }
       ],
-      "title": "Time Since Last Sold-History Activity"
+      "title": "Seconds Since Last Sold-History Activity"
     },
     {
       "datasource": {
@@ -690,7 +690,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 48
+        "y": 36
       },
       "targets": [
         {
@@ -751,7 +751,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 48
+        "y": 36
       },
       "targets": [
         {
@@ -792,7 +792,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 4
+        "y": 40
       },
       "options": {
         "colorMode": "background",
@@ -814,7 +814,7 @@
           "refId": "A"
         }
       ],
-      "title": "Time Since Last Status Activity",
+      "title": "Seconds Since Last Status Activity",
       "type": "stat"
     },
     {
@@ -848,7 +848,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 4
+        "y": 40
       },
       "options": {
         "colorMode": "background",
@@ -924,7 +924,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 4
+        "y": 40
       },
       "targets": [
         {
@@ -952,7 +952,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 44
       },
       "options": {
         "legend": {
@@ -999,7 +999,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 56
+        "y": 44
       },
       "options": {
         "legend": {
@@ -1037,6 +1037,260 @@
       ],
       "title": "Status Worker Outcomes (24h)",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 86400
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 52
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "time() - max(booli_image_summary_last_activity_unixtime_seconds)",
+          "refId": "A"
+        }
+      ],
+      "title": "Seconds Since Last Photo-Summary Activity",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 52
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(booli_image_summary_pending)",
+          "refId": "A"
+        }
+      ],
+      "title": "Pending Photo Summaries",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 52
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(booli_image_summary_last_images_processed)",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Photos Analyzed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 56
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "expr": "increase(booli_image_summary_summarized_total[24h])",
+          "legendFormat": "summarized",
+          "refId": "A"
+        },
+        {
+          "expr": "increase(booli_image_summary_failed_total[24h])",
+          "legendFormat": "failed",
+          "refId": "B"
+        },
+        {
+          "expr": "increase(booli_image_summary_images_processed_total[24h])",
+          "legendFormat": "photos analyzed",
+          "refId": "C"
+        }
+      ],
+      "title": "Photo Summaries (24h)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 56
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "expr": "max(booli_image_summary_pending)",
+          "legendFormat": "pending",
+          "refId": "A"
+        }
+      ],
+      "title": "Photo-Summary Backlog",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
@@ -1058,6 +1312,6 @@
   "timezone": "",
   "title": "Booli Overview",
   "uid": "booli-overview",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

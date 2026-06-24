@@ -1,6 +1,9 @@
 global:
   scrape_interval: 1m
 
+rule_files:
+  - booli-alerts.yml
+
 scrape_configs:
   - job_name: node
     static_configs:
