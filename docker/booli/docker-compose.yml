@@ -339,4 +339,4 @@ networks:
   monitoring:
     external: true
   ollama:
-    external: true
+    name: ollama
