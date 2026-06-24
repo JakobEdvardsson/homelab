@@ -69,6 +69,9 @@ services:
       NEO4J_PASSWORD: ${BOOLI_NEO4J_PASSWORD}
       NEO4J_DATABASE: ${BOOLI_NEO4J_DATABASE}
       NEO4J_SCHEMA_ENSURE_ENABLED: "true"
+      LLM_BASE_URL: ${BOOLI_LLM_BASE_URL:-http://ollama:11434/v1}
+      LLM_MODEL: ${BOOLI_LLM_MODEL:-qwen2.5:7b-instruct}
+      LLM_VISION_MODEL: ${BOOLI_LLM_VISION_MODEL:-qwen2.5vl:7b}
     volumes:
       - ${APPDATA_ROOT}/booli/data:/app/data
     depends_on:
@@ -91,6 +94,7 @@ services:
     networks:
       - default
       - monitoring
+      - ollama
 
   booli-web:
     container_name: booli-web
@@ -246,6 +250,46 @@ services:
     networks:
       - default
 
+  booli-image-summary:
+    container_name: booli-image-summary
+    image: ghcr.io/jakobedvardsson/booli-scraper-image-summary:${BOOLI_IMAGE_TAG}
+    restart: unless-stopped
+    profiles:
+      - ai
+    env_file:
+      - .env
+    environment:
+      NEO4J_URI: ${BOOLI_NEO4J_URI}
+      NEO4J_USERNAME: ${BOOLI_NEO4J_USERNAME}
+      NEO4J_PASSWORD: ${BOOLI_NEO4J_PASSWORD}
+      NEO4J_DATABASE: ${BOOLI_NEO4J_DATABASE}
+      NEO4J_SCHEMA_ENSURE_ENABLED: "false"
+      LLM_BASE_URL: ${BOOLI_LLM_BASE_URL:-http://ollama:11434/v1}
+      LLM_MODEL: ${BOOLI_LLM_MODEL:-qwen2.5:7b-instruct}
+      LLM_VISION_MODEL: ${BOOLI_LLM_VISION_MODEL:-qwen2.5vl:7b}
+      IMAGE_DIR: /app/data/images
+      IMAGE_SUMMARY_INTERVAL_SECONDS: ${BOOLI_IMAGE_SUMMARY_INTERVAL_SECONDS:-21600}
+      PROMETHEUS_PUSHGATEWAY_URL: http://booli-pushgateway:9091
+    depends_on:
+      booli-neo4j:
+        condition: service_healthy
+      booli-api:
+        condition: service_healthy
+      booli-pushgateway:
+        condition: service_healthy
+    command: ["/app/image-summary"]
+    volumes:
+      - ${APPDATA_ROOT}/booli/data:/app/data
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docker.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "booli"
+    networks:
+      - default
+      - ollama
+
   booli-sold-history:
     container_name: booli-sold-history
     image: ghcr.io/jakobedvardsson/booli-scraper-sold-history:${BOOLI_IMAGE_TAG}
@@ -293,4 +337,6 @@ networks:
   caddy_internal:
     external: true
   monitoring:
+    external: true
+  ollama:
     external: true
