@@ -1,0 +1,94 @@
+groups:
+  - name: booli-scraper
+    rules:
+      - alert: BooliScraperFailedRecently
+        expr: (time() - max(booli_scraper_last_failure_unixtime_seconds{run_type="active"}) < 7200) and (max(booli_scraper_last_failure_unixtime_seconds{run_type="active"}) > max(booli_scraper_last_success_unixtime_seconds{run_type="active"}))
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Booli scraper failed recently"
+          description: "The most recent active scraper run failed within the last two hours."
+
+      - alert: BooliScraperStale
+        expr: time() - max(booli_scraper_last_activity_unixtime_seconds{run_type="active"}) > 7200
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Booli scraper is stale"
+          description: "No active scraper activity has been observed for more than two hours."
+
+      - alert: BooliScraperNoRecentSuccess
+        expr: time() - max(booli_scraper_last_success_unixtime_seconds{run_type="active"}) > 7200
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Booli scraper has not completed successfully recently"
+          description: "No successful active scraper run has completed in the last two hours."
+
+      - alert: BooliImageDownloadFailures
+        expr: (sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])) >= 5) and ((sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])) / clamp_min(sum(increase(booli_scraper_images_downloaded_total{run_type="active"}[30m])) + sum(increase(booli_scraper_images_reused_total{run_type="active"}[30m])) + sum(increase(booli_scraper_images_failed_total{run_type="active"}[30m])), 1)) > 0.2)
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli image downloads are failing"
+          description: "At least five image downloads have failed in the last 30 minutes and the failure ratio is above 20%."
+
+  - name: booli-status
+    rules:
+      - alert: BooliStatusFailedRecently
+        expr: (time() - max(booli_status_last_failure_unixtime_seconds) < 7200) and (max(booli_status_last_failure_unixtime_seconds) > max(booli_status_last_success_unixtime_seconds))
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli sold-status worker failed recently"
+          description: "The most recent sold-status worker run failed within the last two hours."
+
+      - alert: BooliStatusStale
+        expr: time() - max(booli_status_last_activity_unixtime_seconds) > 43200
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli sold-status worker is stale"
+          description: "No sold-status worker activity has been observed for more than 12 hours."
+
+  - name: booli-image-summary
+    rules:
+      - alert: BooliImageSummaryFailedRecently
+        expr: (time() - max(booli_image_summary_last_failure_unixtime_seconds) < 7200) and (max(booli_image_summary_last_failure_unixtime_seconds) > max(booli_image_summary_last_success_unixtime_seconds))
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli image-summary worker failed recently"
+          description: "The most recent image-summary worker pass failed within the last two hours (check the vision model endpoint)."
+
+      - alert: BooliImageSummaryStale
+        expr: time() - max(booli_image_summary_last_activity_unixtime_seconds) > 86400
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli image-summary worker is stale"
+          description: "No image-summary worker activity has been observed for more than 24 hours."
+
+  - name: booli-api
+    rules:
+      - alert: BooliAPIHigh5xxRate
+        expr: |
+          (
+            sum(rate(booli_api_http_requests_total{status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(booli_api_http_requests_total[5m])), 1)
+          ) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Booli API 5xx rate is elevated"
+          description: "More than 5% of API requests have returned 5xx over the last 5 minutes."

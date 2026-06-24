@@ -1,0 +1,23 @@
+name: ollama
+
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ${APPDATA_ROOT}/ollama:/root/.ollama
+    labels:
+      net.unraid.docker.managed: "composeman"
+      net.unraid.docker.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/ollama.png"
+      net.unraid.docker.webui: ""
+      net.unraid.docker.shell: "sh"
+      folder.view3: "ollama"
+    networks:
+      - default
+      - ollama
+
+networks:
+  ollama:
+    name: ollama
+    driver: bridge
